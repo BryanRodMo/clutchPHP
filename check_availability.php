@@ -3,7 +3,7 @@ require_once("includes/config.php");
 if(!empty($_POST["cid"])) {
 	$cid= $_POST["cid"];
 	
-		$result =mysqli_query($bd, "SELECT studentRegno FROM 	courseenrolls WHERE course='$cid'");
+		$result =mysqli_query($bd, "SELECT studentRegno FROM courseenrolls WHERE course='$cid'");
 		$count=mysqli_num_rows($result);
 if($count>0)
 {
