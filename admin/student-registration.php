@@ -68,7 +68,7 @@ else
                        <form name="dept" method="post">
    <div class="form-group">
     <label for="studentname">Student Name  </label>
-    <input type="text" class="form-control" id="studentname" name="studentname" placeholder="Student Name" required />
+    <input type="text" class="form-control" id="studentname" pattern="[^0-9]+" name="studentname" placeholder="Student Name" required />
   </div>
                            <div class="form-group">
     <label for="studentyearofstudy">Year of Study   </label>
@@ -76,8 +76,8 @@ else
   </div>
 
  <div class="form-group">
-    <label for="studentregno">Username (name.lastname)   </label>
-    <input type="text" class="form-control" id="studentregno" name="studentregno" pattern="[^0-9]+" onBlur="userAvailability()" placeholder="Student Number" required />
+    <label for="studentregno">Username (Example: name.lastname)  </label>
+    <input type="text" class="form-control" id="studentregno" name="studentregno" pattern="[a-z]+\.[a-z]{1,}$" onBlur="userAvailability()" placeholder="Name followed by a '.' and Lastname (must be lowercase)" required />
      <span id="user-availability-status1" style="font-size:12px;">
   </div>
 
@@ -85,7 +85,7 @@ else
 
 <div class="form-group">
     <label for="password">Password  </label>
-    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
+    <input type="password" class="form-control" id="password" pattern=".{8,}" name="password" placeholder="Enter password (8 characters minimum)" required />
   </div>   
 
  <button type="submit" name="submit" id="submit" class="btn btn-default">Submit</button>

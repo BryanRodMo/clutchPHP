@@ -12,7 +12,11 @@ $pincode = rand(100000,999999);
 $ret=mysqli_query($bd, "insert into students(studentName,StudentRegno,password,pincode) values('$studentname','$studentregno','$password','$pincode')");
 if($ret)
 {
-$_SESSION['msg']="Student Registered Successfully !!";
+$extra="change-password.php";
+$host=$_SERVER['HTTP_HOST'];
+$uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
+header("location:http://$host$uri/$extra");
+exit();
 }
 else
 {
@@ -28,7 +32,7 @@ else
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Admin | Student Registration</title>
+    <title>Student Registration</title>
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <link href="assets/css/font-awesome.css" rel="stylesheet" />
     <link href="assets/css/style.css" rel="stylesheet" />
@@ -64,7 +68,7 @@ else
                        <form name="dept" method="post">
    <div class="form-group">
     <label for="studentname">Student Name  </label>
-    <input type="text" class="form-control" id="studentname" name="studentname" placeholder="Student Name" required />
+    <input type="text" class="form-control" id="studentname" pattern="[^0-9]+" name="studentname" placeholder="Student Name" required />
   </div>
                            <div class="form-group">
     <label for="studentyearofstudy">Year of Study   </label>
@@ -72,8 +76,8 @@ else
   </div>
 
  <div class="form-group">
-    <label for="studentregno">Student Number   </label>
-    <input type="text" class="form-control" id="studentregno" name="studentregno" onBlur="userAvailability()" placeholder="Student Number" required />
+    <label for="studentregno">Username (Example: name.lastname)  </label>
+    <input type="text" class="form-control" id="studentregno" name="studentregno" pattern="[a-z]+\.[a-z]{1,}$" onBlur="userAvailability()" placeholder="Name followed by a '.' and Lastname (must be lowercase)" required />
      <span id="user-availability-status1" style="font-size:12px;">
   </div>
 
@@ -81,7 +85,7 @@ else
 
 <div class="form-group">
     <label for="password">Password  </label>
-    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
+    <input type="password" class="form-control" id="password" pattern=".{8,}" name="password" placeholder="Enter password (8 characters minimum)" required />
   </div>   
 
  <button type="submit" name="submit" id="submit" class="btn btn-default">Submit</button>
