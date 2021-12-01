@@ -77,7 +77,7 @@ else
 
  <div class="form-group">
     <label for="student_id">Username (Example: name.lastname)  </label>
-    <input type="text" class="form-control" id="student_id" name="student_id" pattern="[A-Z]{4}[0-9]{4}" onBlur="userAvailability()" placeholder="Name followed by a '.' and Lastname (must be lowercase)" required />
+    <input type="text" class="form-control" id="student_id" name="student_id" pattern="[a-z]+\.[a-z]{1,}$" onBlur="userAvailability()" placeholder="Name followed by a '.' and Lastname (must be lowercase)" required />
      <span id="user-availability-status1" style="font-size:12px;">
   </div>
 

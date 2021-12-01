@@ -75,7 +75,7 @@ if(isset($_GET['del']))
                        <form name="dept" method="post">
    <div class="form-group">
     <label for="coursecode">Course ID  </label>
-    <input type="text" class="form-control" id="coursecode" name="coursecode" pattern="[A-Z]{4}+\[0-9]{4,}$" placeholder="Course ID" required />
+    <input type="text" class="form-control" id="coursecode" name="coursecode" pattern="[A-Z]{4}[0-9]{4}" maxlength="8" placeholder="Course ID" required />
   </div>
 
  <div class="form-group">
