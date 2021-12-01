@@ -58,7 +58,7 @@ else{
                                             <th>Course Name </th>
                                             <th>Session </th>
                                             <th> Department</th>
-                                             <th>Level</th>
+                                             <th>section</th>
                                                 <th>Semester</th>
                                              <th>Enrollment Date</th>
                                              <th>Action</th>
@@ -66,7 +66,7 @@ else{
                                     </thead>
                                     <tbody>
 <?php
-$sql=mysqli_query($bd, "select courseenrolls.course as cid, course.courseName as courname,session.session as session,department.department as dept,level.level as level,courseenrolls.enrollDate as edate ,semester.semester as sem from courseenrolls join course on course.id=courseenrolls.course join session on session.id=courseenrolls.session join department on department.id=courseenrolls.department join level on level.id=courseenrolls.level  join semester on semester.id=courseenrolls.semester  where courseenrolls.studentRegno='".$_SESSION['login']."'");
+$sql=mysqli_query($bd, "select enrollments.course as cid, course.courseName as courname,session.session as session,department.department as dept,section.section as section,enrollments.enrollDate as edate ,semester.semester as sem from enrollments join course on course.id=courseenrolls.course join session on session.id=enrollments.session join department on department.id=enrollments.department join section on section.id=courseenrolls.section  join semester on semester.id=courseenrolls.semester  where courseenrolls.studentRegno='".$_SESSION['login']."'");
 $cnt=1;
 while($row=mysqli_fetch_array($sql))
 {
@@ -78,7 +78,7 @@ while($row=mysqli_fetch_array($sql))
                                             <td><?php echo htmlentities($row['courname']);?></td>
                                             <td><?php echo htmlentities($row['session']);?></td>
                                             <td><?php echo htmlentities($row['dept']);?></td>
-                                            <td><?php echo htmlentities($row['level']);?></td>
+                                            <td><?php echo htmlentities($row['section']);?></td>
                                             <td><?php echo htmlentities($row['sem']);?></td>
                                              <td><?php echo htmlentities($row['edate']);?></td>
                                             <td>

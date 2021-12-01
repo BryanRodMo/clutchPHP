@@ -9,14 +9,14 @@ else{
 
 if(isset($_POST['submit']))
 {
-$studentregno=$_POST['studentregno'];
+$student_id=$_POST['student_id'];
 $pincode=$_POST['Pincode'];
 $session=$_POST['session'];
 $dept=$_POST['department'];
-$level=$_POST['level'];
+$section=$_POST['section'];
 $course=$_POST['course'];
 $sem=$_POST['sem'];
-$ret=mysqli_query($bd, "insert into courseenrolls(studentRegno,pincode,session,department,level,course,semester) values('$studentregno','$pincode','$session','$dept','$level','$course','$sem')");
+$ret=mysqli_query($bd, "insert into enrollments(student_id,pincode,session,department,section,course,semester) values('$student_id','$pincode','$session','$dept','$section','$course','$sem')");
 if($ret)
 {
 $_SESSION['msg']="Enroll Successfully !!";
@@ -65,7 +65,7 @@ else
                           Course Enroll
                         </div>
 <font color="green" align="center"><?php echo htmlentities($_SESSION['msg']);?><?php echo htmlentities($_SESSION['msg']="");?></font>
-<?php $sql=mysqli_query($bd, "select * from students where StudentRegno='".$_SESSION['login']."'");
+<?php $sql=mysqli_query($bd, "select * from student where student_id='".$_SESSION['login']."'");
 $cnt=1;
 while($row=mysqli_fetch_array($sql))
 { ?>
@@ -78,8 +78,8 @@ while($row=mysqli_fetch_array($sql))
   </div>
 
  <div class="form-group">
-    <label for="studentregno">Student Reg No   </label>
-    <input type="text" class="form-control" id="studentregno" name="studentregno" value="<?php echo htmlentities($row['StudentRegno']);?>"  placeholder="Student Reg no" readonly />
+    <label for="student_id">Student Reg No   </label>
+    <input type="text" class="form-control" id="student_id" name="student_id" value="<?php echo htmlentities($row['student_id']);?>"  placeholder="Student Reg no" readonly />
     
   </div>
 
@@ -133,15 +133,15 @@ while($row=mysqli_fetch_array($sql))
 
 
 <div class="form-group">
-    <label for="Level">Level  </label>
-    <select class="form-control" name="level" required="required">
-   <option value="">Select Level</option>   
+    <label for="section">section  </label>
+    <select class="form-control" name="section" required="required">
+   <option value="">Select section</option>   
    <?php 
-$sql=mysqli_query($bd, "select * from level");
+$sql=mysqli_query($bd, "select * from section");
 while($row=mysqli_fetch_array($sql))
 {
 ?>
-<option value="<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['level']);?></option>
+<option value="<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['section']);?></option>
 <?php } ?>
 
     </select> 

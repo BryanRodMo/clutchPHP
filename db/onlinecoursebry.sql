@@ -50,10 +50,9 @@ INSERT INTO `admin` (`id`, `username`, `password`, `creationDate`, `updationDate
 
 CREATE TABLE `course` (
   `id` int(11) NOT NULL,
-  `courseCode` varchar(255) NOT NULL,
-  `courseName` varchar(255) NOT NULL,
-  `courseUnit` varchar(255) NOT NULL,
-  `noofSeats` int(11) NOT NULL,
+  `course_id` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `credits` varchar(255) NOT NULL,
   `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `updationDate` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -62,9 +61,9 @@ CREATE TABLE `course` (
 -- Dumping data for table `course`
 --
 
-INSERT INTO `course` (`id`, `courseCode`, `courseName`, `courseUnit`, `noofSeats`, `creationDate`, `updationDate`) VALUES
-(1, '4019', 'Intro a PHP', '4', 50, '2021-11-30 20:40:14', ''),
-(2, '4075', 'Software Engineering', '4', 2, '2021-11-30 22:16:56', '');
+INSERT INTO `course` (`id`, `course_id`, `title`, `credits`, `creationDate`, `updationDate`) VALUES
+(1, '4019', 'Intro a PHP', '4', '2021-11-30 20:40:14', ''),
+(2, '4075', 'Software Engineering', '4','2021-11-30 22:16:56', '');
 
 -- --------------------------------------------------------
 
@@ -72,13 +71,12 @@ INSERT INTO `course` (`id`, `courseCode`, `courseName`, `courseUnit`, `noofSeats
 -- Table structure for table `courseenrolls`
 --
 
-CREATE TABLE `courseenrolls` (
+CREATE TABLE `enrollments` (
   `id` int(11) NOT NULL,
-  `studentRegno` varchar(255) NOT NULL,
-  `pincode` varchar(255) NOT NULL,
+  `student_id` varchar(255) NOT NULL,
   `session` int(11) NOT NULL,
   `department` int(11) NOT NULL,
-  `level` int(11) NOT NULL,
+  `section_id` int(11) NOT NULL,
   `semester` int(11) NOT NULL,
   `course` int(11) NOT NULL,
   `enrollDate` timestamp NOT NULL DEFAULT current_timestamp()
@@ -88,9 +86,9 @@ CREATE TABLE `courseenrolls` (
 -- Dumping data for table `courseenrolls`
 --
 
-INSERT INTO `courseenrolls` (`id`, `studentRegno`, `pincode`, `session`, `department`, `level`, `semester`, `course`, `enrollDate`) VALUES
-(1, 'bryan.rodriguez', '953740', 1, 1, 1, 1, 1, '2021-11-30 20:40:34'),
-(2, 'yadiel.cruzado', '717873', 1, 1, 1, 1, 2, '2021-11-30 22:17:26');
+INSERT INTO `enrollments` (`id`, `student_id`, `session`, `department`, `section_id`, `semester`, `course`, `enrollDate`) VALUES
+(1, 'bryan.rodriguez', 1, 1, 1, 1, 1, '2021-11-30 20:40:34'),
+(2, 'yadiel.cruzado', 1, 1, 1, 1, 2, '2021-11-30 22:17:26');
 
 -- --------------------------------------------------------
 
@@ -117,21 +115,15 @@ INSERT INTO `department` (`id`, `department`, `creationDate`) VALUES
 -- Table structure for table `level`
 --
 
-CREATE TABLE `level` (
+CREATE TABLE `section` (
   `id` int(11) NOT NULL,
-  `level` varchar(255) NOT NULL,
+  `course_id` varchar(255) NOT NULL,
+  `section_id` varchar(255) NOT NULL,
+  `capacity` int(11) NOT NULL,
   `creationDate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `level`
---
 
-INSERT INTO `level` (`id`, `level`, `creationDate`) VALUES
-(1, 'Level 1', '2020-06-03 14:03:20'),
-(2, 'Level 2', '2020-06-03 14:03:20'),
-(3, 'Level 3', '2020-06-03 14:03:32'),
-(4, 'Level 4', '2020-06-03 14:03:32');
 
 -- --------------------------------------------------------
 
@@ -178,16 +170,12 @@ INSERT INTO `session` (`id`, `session`, `creationDate`) VALUES
 -- Table structure for table `students`
 --
 
-CREATE TABLE `students` (
-  `StudentRegno` varchar(255) NOT NULL,
-  `studentPhoto` varchar(255) DEFAULT NULL,
+CREATE TABLE `student` (
+  `student_id` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `studentName` varchar(255) NOT NULL,
-  `pincode` varchar(255) NOT NULL,
+  `year_of_study` int(1) NOT NULL,
   `session` varchar(255) NOT NULL,
-  `department` varchar(255) NOT NULL,
-  `semester` varchar(255) NOT NULL,
-  `cgpa` decimal(10,2) NOT NULL,
   `creationdate` timestamp NOT NULL DEFAULT current_timestamp(),
   `updationDate` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -196,15 +184,15 @@ CREATE TABLE `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`StudentRegno`, `studentPhoto`, `password`, `studentName`, `pincode`, `session`, `department`, `semester`, `cgpa`, `creationdate`, `updationDate`) VALUES
-('bryan.rodriguez', '', '25d55ad283aa400af464c76d713c07ad', 'Bryan', '705900', '', '', '', '4.00', '2021-11-30 21:05:50', ''),
-('elian.acevedo', NULL, '25d55ad283aa400af464c76d713c07ad', 'Elian', '101434', '', '', '', '0.00', '2021-11-30 21:07:47', ''),
-('eliud.rivas', NULL, '25d55ad283aa400af464c76d713c07ad', 'Eliud', '888404', '', '', '', '0.00', '2021-11-30 21:15:28', ''),
-('ixan.melendez', NULL, '25d55ad283aa400af464c76d713c07ad', 'Ixan', '693509', '', '', '', '0.00', '2021-11-30 21:04:44', ''),
-('jamilette.alvelo', NULL, '25d55ad283aa400af464c76d713c07ad', 'Jamilette', '651295', '', '', '', '0.00', '2021-11-30 21:13:07', ''),
-('steven.maldonado', NULL, '25d55ad283aa400af464c76d713c07ad', 'steven', '651073', '', '', '', '0.00', '2021-11-30 21:18:05', ''),
-('yadiel.cruzado', NULL, '25d55ad283aa400af464c76d713c07ad', 'Yadiel', '717873', '', '', '', '0.00', '2021-11-30 21:27:33', ''),
-('yamil.galan', NULL, '25d55ad283aa400af464c76d713c07ad', 'Yamil', '790600', '', '', '', '0.00', '2021-11-30 21:16:27', '');
+INSERT INTO `student` (`student_id`, `password`, `studentName`, `year_of_study`, `session`, `creationdate`, `updationDate`) VALUES
+('bryan.rodriguez', NULL, 'Bryan', '4', '', '2021-11-30 21:05:50', ''),
+('elian.acevedo', NULL, 'Elian', '4', '', '2021-11-30 21:07:47', ''),
+('eliud.rivas', NULL, 'Eliud', '5', '', '2021-11-30 21:15:28', ''),
+('ixan.melendez', NULL, 'Ixan', '4', '', '2021-11-30 21:04:44', ''),
+('jamilette.alvelo', NULL, 'Jamilette', '3', '', '2021-11-30 21:13:07', ''),
+('steven.maldonado', NULL, 'steven', '2', '', '2021-11-30 21:18:05', ''),
+('yadiel.cruzado', NULL, 'Yadiel', '1', '', '2021-11-30 21:27:33', ''),
+('yamil.galan', NULL, 'Yamil', '5', '', '2021-11-30 21:16:27', '');
 
 -- --------------------------------------------------------
 
@@ -214,7 +202,7 @@ INSERT INTO `students` (`StudentRegno`, `studentPhoto`, `password`, `studentName
 
 CREATE TABLE `userlog` (
   `id` int(11) NOT NULL,
-  `studentRegno` varchar(255) NOT NULL,
+  `student_id` varchar(255) NOT NULL,
   `userip` binary(16) NOT NULL,
   `loginTime` timestamp NOT NULL DEFAULT current_timestamp(),
   `logout` varchar(255) NOT NULL,
@@ -225,7 +213,7 @@ CREATE TABLE `userlog` (
 -- Dumping data for table `userlog`
 --
 
-INSERT INTO `userlog` (`id`, `studentRegno`, `userip`, `loginTime`, `logout`, `status`) VALUES
+INSERT INTO `userlog` (`id`, `student_id`, `userip`, `loginTime`, `logout`, `status`) VALUES
 (1, 'bryan.rodriguez', 0x3a3a3100000000000000000000000000, '2021-11-30 20:38:53', '01-12-2021 02:37:14 AM', 1),
 (2, '', 0x3a3a3100000000000000000000000000, '2021-11-30 21:24:58', '', 1),
 (3, '', 0x3a3a3100000000000000000000000000, '2021-11-30 21:25:40', '', 1),
@@ -257,7 +245,7 @@ ALTER TABLE `course`
 --
 -- Indexes for table `courseenrolls`
 --
-ALTER TABLE `courseenrolls`
+ALTER TABLE `enrollments`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -269,7 +257,7 @@ ALTER TABLE `department`
 --
 -- Indexes for table `level`
 --
-ALTER TABLE `level`
+ALTER TABLE `section`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -287,8 +275,8 @@ ALTER TABLE `session`
 --
 -- Indexes for table `students`
 --
-ALTER TABLE `students`
-  ADD PRIMARY KEY (`StudentRegno`);
+ALTER TABLE `student`
+  ADD PRIMARY KEY (`student_id`);
 
 --
 -- Indexes for table `userlog`
@@ -315,7 +303,7 @@ ALTER TABLE `course`
 --
 -- AUTO_INCREMENT for table `courseenrolls`
 --
-ALTER TABLE `courseenrolls`
+ALTER TABLE `enrollments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
@@ -327,7 +315,7 @@ ALTER TABLE `department`
 --
 -- AUTO_INCREMENT for table `level`
 --
-ALTER TABLE `level`
+ALTER TABLE `section`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --

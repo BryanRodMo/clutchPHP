@@ -6,17 +6,17 @@ if(isset($_POST['submit']))
 {
 $regno=$_POST['regno'];
 $password=md5($_POST['password']);
-$query=mysqli_query($bd, "SELECT * FROM students WHERE StudentRegno='$regno' and password='$password'");
+$query=mysqli_query($bd, "SELECT * FROM student WHERE student_id='$regno' and password='$password'");
 if(mysqli_num_rows($query)>0)
 {
 $num=mysqli_fetch_array($query);
 $extra="change-password.php";//
 $_SESSION['login']=$_POST['regno'];
-$_SESSION['id']=$num['studentRegno'];
-$_SESSION['sname']=$num['studentName'];
+$_SESSION['id']=$num['student_id'];
+$_SESSION['sname']=$num['name'];
 $uip=$_SERVER['REMOTE_ADDR'];
 $status=1;
-$log=mysqli_query($bd, "insert into userlog(studentRegno,userip,status) values('".$_SESSION['login']."','$uip','$status')");
+$log=mysqli_query($bd, "insert into userlog(student_id,userip,status) values('".$_SESSION['login']."','$uip','$status')");
 $host=$_SERVER['HTTP_HOST'];
 $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
 header("location:http://$host$uri/$extra");

@@ -12,9 +12,11 @@ if(isset($_POST['submit']))
 $coursecode=$_POST['coursecode'];
 $coursename=$_POST['coursename'];
 $courseunit=$_POST['courseunit'];
+$coursesection=$_POST['coursesection'];
 $seatlimit=$_POST['seatlimit'];
-$ret=mysqli_query($bd, "insert into course(courseCode,courseName,courseUnit,noofSeats) values('$coursecode','$coursename','$courseunit','$seatlimit')");
-if($ret)
+$ret=mysqli_query($bd, "insert into course(course_id,title,credits) values('$coursecode','$coursename','$courseunit')");
+$ret2=mysqli_query($bd, "insert into section(course_id,section_id,capacity) values('$coursecode','$coursesection','$seatlimit')");
+if($ret&&$ret2)
 {
 $_SESSION['msg']="Course Created Successfully !!";
 }
@@ -25,7 +27,7 @@ else
 }
 if(isset($_GET['del']))
       {
-              mysqli_query($bd, "delete from course where id = '".$_GET['id']."'");
+              mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");
                   $_SESSION['delmsg']="Course deleted !!";
       }
 ?>
@@ -72,23 +74,27 @@ if(isset($_GET['del']))
                         <div class="panel-body">
                        <form name="dept" method="post">
    <div class="form-group">
-    <label for="coursecode">Course Code  </label>
-    <input type="text" class="form-control" id="coursecode" name="coursecode" placeholder="Course Code" required />
+    <label for="coursecode">Course ID  </label>
+    <input type="text" class="form-control" id="coursecode" name="coursecode" pattern="[A-Z]{4}+\[0-9]{4,}$" placeholder="Course ID" required />
   </div>
 
  <div class="form-group">
-    <label for="coursename">Course Name  </label>
-    <input type="text" class="form-control" id="coursename" name="coursename" placeholder="Course Name" required />
+    <label for="coursename">Title  </label>
+    <input type="text" class="form-control" id="coursename" name="coursename" placeholder="Course Title" required />
+  </div>
+ <div class="form-group">
+    <label for="coursesection">Section  </label>
+    <input type="text" class="form-control" id="coursesection" name="coursesection" placeholder="Course Section" maxlength="3" required />
   </div>
 
 <div class="form-group">
-    <label for="courseunit">Course Credits  </label>
+    <label for="courseunit">Credits  </label>
     <input type="text" class="form-control" id="courseunit" name="courseunit" min="1" placeholder="Course Credits" required />
   </div> 
 
 <div class="form-group">
     <label for="seatlimit">Capacity  </label>
-    <input type="text" class="form-control" id="seatlimit" name="seatlimit" min="1" placeholder="Capacity" required />
+    <input type="text" class="form-control" id="seatlimit" name="seatlimit" min="1" placeholder="Course Capacity" required />
   </div>   
 
  <button type="submit" name="submit" class="btn btn-default">Submit</button>
@@ -114,15 +120,15 @@ if(isset($_GET['del']))
                                             <th>#</th>
                                             <th>Course Code</th>
                                             <th>Course Name </th>
-                                            <th>Course Unit</th>
-                                            <th>Seat limit</th>
-                                             <th>Creation Date</th>
-                                             <th>Action</th>
+                                             <th>Section</th>
+                                            <th>Course Credits</th>
+                                            <th>Capacity</th>
+                                             <th>       Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 <?php
-$sql=mysqli_query($bd, "select * from course");
+$sql=mysqli_query($bd, "SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id");
 $cnt=1;
 while($row=mysqli_fetch_array($sql))
 {
@@ -131,11 +137,12 @@ while($row=mysqli_fetch_array($sql))
 
                                         <tr>
                                             <td><?php echo $cnt;?></td>
-                                            <td><?php echo htmlentities($row['courseCode']);?></td>
-                                            <td><?php echo htmlentities($row['courseName']);?></td>
-                                            <td><?php echo htmlentities($row['courseUnit']);?></td>
-                                             <td><?php echo htmlentities($row['noofSeats']);?></td>
-                                            <td><?php echo htmlentities($row['creationDate']);?></td>
+                                            <td><?php echo htmlentities($row['course_id']);?></td>
+                                            <td><?php echo htmlentities($row['title']);?></td>
+                                            <td><?php echo htmlentities($row['section_id']);?></td>
+                                            <td><?php echo htmlentities($row['credits']);?></td>
+                                             <td><?php echo htmlentities($row['capacity']);?></td>
+                    
                                             <td>
                                             <a href="edit-course.php?id=<?php echo $row['id']?>">
 <button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> </a>                                        

@@ -5,11 +5,11 @@ include('includes/config.php');
 
 if(isset($_POST['submit']))
 {
-$studentname=$_POST['studentname'];
-$studentregno=$_POST['studentregno'];
+$name=$_POST['name'];
+$student_id=$_POST['student_id'];
 $password=md5($_POST['password']);
-$pincode = rand(100000,999999);
-$ret=mysqli_query($bd, "insert into students(studentName,StudentRegno,password,pincode) values('$studentname','$studentregno','$password','$pincode')");
+$year_of_study =$_POST['year_of_study'];
+$ret=mysqli_query($bd, "insert into student(name,student_id,password,year_of_study) values('$name','$student_id','$password','$year_of_study')");
 if($ret)
 {
 $extra="change-password.php";
@@ -67,17 +67,17 @@ else
                         <div class="panel-body">
                        <form name="dept" method="post">
    <div class="form-group">
-    <label for="studentname">Student Name  </label>
-    <input type="text" class="form-control" id="studentname" pattern="[^0-9]+" name="studentname" placeholder="Student Name" required />
+    <label for="name">Student Name  </label>
+    <input type="text" class="form-control" id="name" pattern="[^0-9]+" name="name" placeholder="Student Name" required />
   </div>
                            <div class="form-group">
-    <label for="studentyearofstudy">Year of Study   </label>
-    <input type="number" class="form-control" id="studentyearofstudy" name="studentyearofstudy"  min="1" max="5" placeholder="Year of Study" required />
+    <label for="year_of_study">Year of Study   </label>
+    <input type="number" class="form-control" id="year_of_study" name="year_of_study"  min="1" max="5" placeholder="Year of Study" required />
   </div>
 
  <div class="form-group">
-    <label for="studentregno">Username (Example: name.lastname)  </label>
-    <input type="text" class="form-control" id="studentregno" name="studentregno" pattern="[a-z]+\.[a-z]{1,}$" onBlur="userAvailability()" placeholder="Name followed by a '.' and Lastname (must be lowercase)" required />
+    <label for="student_id">Username (Example: name.lastname)  </label>
+    <input type="text" class="form-control" id="student_id" name="student_id" pattern="[A-Z]{4}[0-9]{4}" onBlur="userAvailability()" placeholder="Name followed by a '.' and Lastname (must be lowercase)" required />
      <span id="user-availability-status1" style="font-size:12px;">
   </div>
 
@@ -111,8 +111,8 @@ else
 function userAvailability() {
 $("#loaderIcon").show();
 jQuery.ajax({
-url: "check_availability.php",
-data:'regno='+$("#studentregno").val(),
+url: "check_user_availability.php",
+data:'regno='+$("#student_id").val(),
 type: "POST",
 success:function(data){
 $("#user-availability-status1").html(data);

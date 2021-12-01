@@ -56,7 +56,7 @@ else{
                                         <tr>
                                             <th>#</th>
                                                 
-                                                    <th>Student Reg no </th>
+                                                    <th>Student ID </th>
                                             <th>IP  </th>
                                             <th>Login Time </th>
                                             
@@ -76,7 +76,7 @@ while($row=mysqli_fetch_array($sql))
 
                                         <tr>
                                             <td><?php echo $cnt;?></td>
-                                              <td><?php echo htmlentities($row['studentRegno']);?></td>
+                                              <td><?php echo htmlentities($row['student_id']);?></td>
                                             <td><?php echo htmlentities($row['userip']);?></td>
                                             <td><?php echo htmlentities($row['loginTime']);?></td>
                                             <td><?php echo htmlentities($row['logout']);?></td>
