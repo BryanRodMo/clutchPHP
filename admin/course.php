@@ -117,13 +117,13 @@ if(isset($_GET['del']))
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Course Code</th>
-                                            <th>Course Name </th>
-                                             <th>Section</th>
-                                            <th>Course Credits</th>
-                                            <th>Capacity</th>
-                                             <th>       Action</th>
+                                            <td><b>#</b></td>
+                                            <td><b>Course Code</b></td>
+                                            <td><b>Course Name</b></td>
+                                             <td><b>Section</b></td>
+                                            <td><b>Course Credits</b></td>
+                                            <td><b>Capacity</b></td>
+					     <td><b>Action</b></td>
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -180,7 +180,7 @@ while($row=mysqli_fetch_array($sql))
 
 
 
- <button type="submit" name="submit" id="submit" class="btn btn-default">Enroll</button>
+ <button type="submit" name="enroll" id="submit" class="btn btn-default">Enroll</button>
 </form>
                             </div>
                             </div>
