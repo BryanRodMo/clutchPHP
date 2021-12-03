@@ -1,9 +1,10 @@
 <?php
-include("includes/config.php");
 error_reporting(0);
 ?>
 <?php if($_SESSION['login']!="")
-{?>
+{
+$student_id=$_SESSION['login'];
+?>
 <header>
         <div class="container">
             <div class="row">
@@ -14,9 +15,17 @@ error_reporting(0);
 
 
                     <strong>Last Login:<?php
-        $ret=mysqli_query($bd, "SELECT  * from userlog where student_id='".$_SESSION['login']."' order by id desc limit 1,1");
-                    $row=mysqli_fetch_array($ret);
-                    echo $row['userip']; ?> at <?php echo $row['loginTime'];?></strong>
+                    $query=("SELECT  * from userlog where student_id=? order by id desc limit 1,1");
+                    $stmt=$pdo->prepare($query);
+                    $stmt->execute([$student_id]);
+                    $row= $stmt->fetchALL();
+                    echo $row['userip']; ?> at <?php echo $row['loginTime'];?>
+                   
+                    <!--     $ret=$pdo->query($bd, "SELECT  * from userlog where student_id='".$_SESSION['login']."' order by id desc limit 1,1");
+                    $row= $stmt->fetch($ret);
+                    echo $row['userip']; ?> at <?php/* echo $row['loginTime'];*/?> -->
+                    
+                    </strong>
                 </div>
 
             </div>

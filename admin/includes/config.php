@@ -1,9 +1,12 @@
 <?php
-$mysql_hostname = "localhost";
-$mysql_user = "root";
-$mysql_password = "";
-$mysql_database = "php_project";
-$bd = mysqli_connect($mysql_hostname, $mysql_user, $mysql_password, $mysql_database) or die("Could not connect database");
 
-
-?>
+    function connectDB(){    
+        try{ 
+            $pdoObj = new PDO('mysql:host=136.145.29.193; dbname=bryrodmo_db','bryrodmo','bryccom840');  
+            return $pdoObj;         
+        }        
+ catch(PDOException $e){       
+    echo $e->getMessage();                     
+     return false;         
+     }    
+} ?>

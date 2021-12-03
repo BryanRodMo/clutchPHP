@@ -1,16 +1,24 @@
 <?php
 session_start();
-error_reporting(0);
 include("includes/config.php");
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
+
+
 if(isset($_POST['submit']))
 {
-    $username=$_POST['username'];
-    $password=md5($_POST['password']);
+$username=$_POST['username'];
+$password=md5($_POST['password']);/*
 $query=mysqli_query($bd, "SELECT * FROM admin WHERE username='$username' and password='$password'");
-$num=mysqli_fetch_array($query);
-if($num>0)
+$num=mysqli_fetch_array($query);*/
+$query=("SELECT * FROM admin WHERE username=? and password=?");
+$stmt=$pdo->prepare($query);
+$stmt->execute([$username,$password]);
+$num=$stmt->fetchALL();  
+if($num>0) 
 {
-$extra="change-password.php";//
+$extra="course.php";//
 $_SESSION['alogin']=$_POST['username'];
 $_SESSION['id']=$num['id'];
 $host=$_SERVER['HTTP_HOST'];
@@ -67,24 +75,19 @@ exit();
                 </div>
                 </form>
                 <div class="col-md-6">
-                    <div class="alert alert-info">
-                        This is a free bootstrap admin template with basic pages you need to craft your project. 
-                        Use this template for free to use for personal and commercial use.
+                    This is a Web Programming Project for CCOM4019 - ADMIN SIDE
                         <br />
-                         <strong> Some of its features are given below :</strong>
+                         <strong> Overview:</strong>
                         <ul>
                             <li>
-                                Responsive Design Framework Used
+                                A system for students to select courses for enrollment.  
                             </li>
                             <li>
-                                Easy to use and customize
+                                The students will be able to search for their course, using either the entire course code or a prefix of it, and then add it to their enrollment.
                             </li>
                             <li>
-                                Font awesome icons included
-                            </li>
-                            <li>
-                                Clean and light code used.
-                            </li>
+                                The administrators will be able to create courses, sections, or process the pending students' enrollment.                            </li>
+                            
                         </ul>
                        
                     </div>

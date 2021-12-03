@@ -1,22 +1,41 @@
 <?php
 session_start();
-error_reporting(1);
-include("includes/config.php");
+include "includes/config.php";
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
+
 if(isset($_POST['submit']))
 {
 $regno=$_POST['regno'];
 $password=md5($_POST['password']);
-$query=mysqli_query($bd, "SELECT * FROM student WHERE student_id='$regno' and password='$password'");
-if(mysqli_num_rows($query)>0)
+$query="SELECT * FROM student WHERE student_id=? and password=?";
+$sql= $pdo->prepare($query);
+//$sql->bindParam("student_id", $regno, "password", $password, PDO::PARAM_STR);
+$sql->execute([$regno, $password]);
+$num=$sql->fetch(PDO::FETCH_ASSOC);
+
+if($num)
 {
-$num=mysqli_fetch_array($query);
-$extra="change-password.php";//
+$extra="search_page.php";//
 $_SESSION['login']=$_POST['regno'];
 $_SESSION['id']=$num['student_id'];
 $_SESSION['sname']=$num['name'];
 $uip=$_SERVER['REMOTE_ADDR'];
 $status=1;
-$log=mysqli_query($bd, "insert into userlog(student_id,userip,status) values('".$_SESSION['login']."','$uip','$status')");
+$query=("insert into userlog (student_id,userip,logout,status) 
+        values(:login,:uip,:logout, :status)");
+$stmt=$pdo->prepare($query);
+$stmt->bindParam('login',$_SESSION['login']);
+$stmt->bindParam('uip',$uip);
+$stmt->bindValue('logout',0);
+$stmt->bindParam('status',$status);
+$stmt->execute();
+    
+    
+    /*
+$$log=mysqli_query("insert into userlog(student_id,userip,status)
+values('".$_SESSION['login']."','$uip','$status')");*/
 $host=$_SERVER['HTTP_HOST'];
 $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
 header("location:http://$host$uri/$extra");
@@ -24,7 +43,7 @@ exit();
 }
 else
 {
-$_SESSION['errmsg']="Invalid Reg no or Password";
+$_SESSION['errmsg']="Invalid Username or Password";
 $extra="index.php";
 $host  = $_SERVER['HTTP_HOST'];
 $uri  = rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
@@ -68,7 +87,7 @@ exit();
                         <input type="password" name="password" class="form-control"  />
                         <hr />
                         <button type="submit" name="submit" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Log Me In </button>&nbsp;
-                        <span>New here? <a href="student-registration.php">Register!</a></span>
+                        <span>New here? <a href="student-registration.php">Register!</a> </span><!-- href="student-registration.php"-->
                 </div>
                 </form>
                 <div class="col-md-6">

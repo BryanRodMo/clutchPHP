@@ -1,6 +1,9 @@
 <?php
 session_start();
 include('includes/config.php');
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
 if(strlen($_SESSION['login'])==0) // or strlen($_SESSION['pcode'])==0)
     {   
 header('location:index.php');
@@ -15,7 +18,14 @@ if(isset($_POST['submit.student_id']))
 $student_id=$_POST['student_id'];
 $section=$_POST['section_id'];
 $course=$_POST['course_id'];
-$ret=mysqli_query($bd, "insert into enrollments(student_id,section,course) values('$student_id','$section','$course')");
+$query=("insert into enrollments (student_id,section,course) 
+        values(:student_id,:section,:password,:course)");
+$stmt=$pdo->prepare($query);
+$stmt->bindParam('student_id',$student_id);
+$stmt->bindParam('section',$section);
+$stmt->bindParam('course',$course);
+$ret=$stmt->execute();
+//$ret=mysqli_query($bd, "insert into enrollments(student_id,section,course) values('$student_id','$section','$course')");
 if($ret)
 {
 $_SESSION['msg']="Enroll Successfully !!";
@@ -65,9 +75,13 @@ else
                           Course Enroll
                         </div>
 <font color="green" align="center"><?php echo htmlentities($_SESSION['msg']);?><?php echo htmlentities($_SESSION['msg']="");?></font>
-<?php $sql=mysqli_query($bd, "select * from student where student_id='".$_SESSION['login']."'");
+<?php $query=("select * from student where student_id=?");
+    $stmt = $pdo->prepare($query);
+    $row = $stmt->execute([$_SESSION['login']]);
+//$sql=mysqli_query($bd, "select * from student where student_id='".$_SESSION['login']."'");
 $cnt=1;
-while($row=mysqli_fetch_array($sql))
+//while($row=mysqli_fetch_array($sql))
+    while($row= $stmt->fetch(PDO::FETCH_ASSOC))
 { ?>
 
                         <div class="panel-body">
@@ -79,7 +93,7 @@ while($row=mysqli_fetch_array($sql))
 
  <div class="form-group">
     <label for="student_id">Username </label>
-    <input type="text" class="form-control" id="student_id" name="student_id" value="<?php echo htmlentities($row['student_id']);?>"  placeholder="Student Reg no" readonly />
+    <input type="text" class="form-control" id="student_id" name="student_id" value="<?php echo htmlentities($row['student_id']);?>"  placeholder="username" readonly />
     
   </div>
 
@@ -100,20 +114,26 @@ while($row=mysqli_fetch_array($sql))
     {
      
      ?><p>Choose from:</p>
-    <form method="post"><?php 
-        $sql=mysqli_query($bd, "SELECT * FROM `section` where course_id like '%$searchrequest%'");
-            while($row=mysqli_fetch_array($sql)){?>
+       <form method="post"><?php 
+          /*  $sql=mysqli_query($bd, "SELECT * FROM `section` where course_id like '%$searchrequest%'");
+            while($row=mysqli_fetch_array($sql))*/
+     $query=("SELECT * FROM `section` where course_id like '%$searchrequest%'");
+     $stmt = $pdo->prepare($query);
+     $row = $stmt->execute();
+            while($row= $stmt->fetch(PDO::FETCH_ASSOC))
+     {?>
             
-                <input type="radio" id="<?php echo htmlentities($row['course_id']);?>" name="<?php echo htmlentities($row['course_id']);?>" value="<?php echo htmlentities($row['section_id']);?>" >
-                <label for="html"><?php echo htmlentities($row['course_id']);?> <?php echo htmlentities($row['section_id']);?></label><br>
+                <input type="radio" id=" <?php echo htmlentities($row['course_id']); ?> "name="<?php echo htmlentities($row['course_id']); ?> "value="<?php echo htmlentities($row['section_id']); ?> " >
+                <label for="html"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
 
-             <?php } if(isset($searchrequest)){ var_dump($_POST['submit']);?>
-     
-    <?php }} ?>
+      <?php } if(isset($searchrequest)){ ?>
     <button type="submit" name="submit"  class="btn btn-default">Enroll</button>
+               <?php  var_dump($_POST['submit']);?>
+     
+    <?php } ?>
     </form>
-
-    <span id="course-availability-status1" style="font-size:12px;">
+<?php } ?>
+   <!-- <span id="course-availability-status1" style="font-size:12px;"> -->
   </div>
 
 
@@ -136,7 +156,7 @@ while($row=mysqli_fetch_array($sql))
   <?php include('includes/footer.php');?>
     <script src="assets/js/jquery-1.11.1.js"></script>
     <script src="assets/js/bootstrap.js"></script>
-<script>
+<script>/*
 function courseAvailability() {
 $("#loaderIcon").show();
 jQuery.ajax({
@@ -149,7 +169,7 @@ $("#loaderIcon").hide();
 },
 error:function (){}
 });
-}
+}*/
 </script>
 
 

@@ -1,6 +1,11 @@
 <?php
 session_start();
 include('includes/config.php');
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
+
+
 if(strlen($_SESSION['alogin'])==0)
     {   
 header('location:index.php');
@@ -14,8 +19,25 @@ $coursename=$_POST['coursename'];
 $courseunit=$_POST['courseunit'];
 $coursesection=$_POST['coursesection'];
 $seatlimit=$_POST['seatlimit'];
+    
+$query=("insert into course (course_id,title,credits) 
+            values(:coursecode,:coursename,:courseunit)");
+$stmt=$pdo->prepare($query);
+$stmt->bindParam('coursecode',$coursecode);
+$stmt->bindParam('coursename',$coursename);
+$stmt->bindParam('courseunit',$courseunit);
+$ret=$stmt->execute();
+    
+$query=("insert into section (course_id,section_id,capacity)
+        values(:coursecode,:coursesection,:capacity)");
+$stmt=$pdo->prepare($query);
+$stmt->bindParam('coursecode',$coursecode);
+$stmt->bindParam('coursesection',$coursesection);
+$stmt->bindParam('capacity',$seatlimit);
+$ret2=$stmt->execute();/*
 $ret=mysqli_query($bd, "insert into course(course_id,title,credits) values('$coursecode','$coursename','$courseunit')");
 $ret2=mysqli_query($bd, "insert into section(course_id,section_id,capacity) values('$coursecode','$coursesection','$seatlimit')");
+    */
 if($ret&&$ret2)
 {
 $_SESSION['msg']="Course Created Successfully !!";
@@ -27,9 +49,22 @@ else
 }
 if(isset($_GET['del']))
       {
-              mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");
-                  $_SESSION['delmsg']="Course deleted !!";
+              /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
+$query=("delete course.*, section.*
+FROM course INNER JOIN section 
+ON course.course_id = section.course_id 
+INNER JOIN enrollments 
+where section.section_id=? && course.course_id=? ");
+$stmt=$pdo->prepare($query);
+$delete=$stmt->execute([$_GET['id'],$_GET['cid']]);
+$_SESSION['delmsg']="Course deleted !!";
       }
+    else
+    {
+        $_SESSION['delmsg']="";
+
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -128,9 +163,12 @@ if(isset($_GET['del']))
                                     </thead>
                                     <tbody>
 <?php
-$sql=mysqli_query($bd, "SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id");
+/*$sql=mysqli_query($bd, "SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id");*/
+$query=("SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id");
+$stmt=$pdo->prepare($query);
+$stmt->execute(); 
 $cnt=1;
-while($row=mysqli_fetch_array($sql))
+while($row=$stmt->fetch(PDO::FETCH_ASSOC))
 {
 ?>
 
@@ -146,7 +184,7 @@ while($row=mysqli_fetch_array($sql))
                                             <td>
                                             <a href="edit-course.php?id=<?php echo $row['id']?>">
 <button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> </a>                                        
-  <a href="course.php?id=<?php echo $row['id']?>&del=delete" onClick="return confirm('Are you sure you want to delete?')">
+  <a href="course.php?id=<?php echo $row['section_id']?>&cid=<?php echo$row['course_id'] ?>&del=delete" onClick="return confirm('Are you sure you want to delete?')">
                                             <button class="btn btn-danger">Delete</button>
 </a>
                                             </td>

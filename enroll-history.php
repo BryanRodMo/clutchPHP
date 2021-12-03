@@ -1,6 +1,9 @@
 <?php
 session_start();
 include('includes/config.php');
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
 if(strlen($_SESSION['login'])==0)
     {   
 header('location:index.php');
@@ -56,38 +59,41 @@ else{
                                         <tr>
                                             <th>#</th>
                                             <th>Course Name </th>
-                                            <th>Session </th>
-                                            <th> Department</th>
-                                             <th>section</th>
-                                                <th>Semester</th>
-                                             <th>Enrollment Date</th>
-                                             <th>Action</th>
+                                             <th>Title</th>
+                                             <th>Section</th>
+                                             <!--<th>Action</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
 <?php
-$sql=mysqli_query($bd, "select enrollments.course as cid, course.courseName as courname,session.session as session,department.department as dept,section.section as section,enrollments.enrollDate as edate ,semester.semester as sem from enrollments join course on course.id=courseenrolls.course join session on session.id=enrollments.session join department on department.id=enrollments.department join section on section.id=courseenrolls.section  join semester on semester.id=courseenrolls.semester  where courseenrolls.studentRegno='".$_SESSION['login']."'");
+$query=("SELECT course.*, section.section_id, section.capacity
+FROM `course` INNER JOIN section 
+ON course.course_id = section.course_id 
+INNER JOIN enrollments 
+ON course.course_id = enrollments.course_id 
+where student_id=?");
+     $stmt=$pdo->prepare($query);
+     $stmt->execute([$_SESSION['login']]);
 $cnt=1;
-while($row=mysqli_fetch_array($sql))
+while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 {
 ?>
 
 
                                         <tr>
                                             <td><?php echo $cnt;?></td>
-                                            <td><?php echo htmlentities($row['courname']);?></td>
-                                            <td><?php echo htmlentities($row['session']);?></td>
-                                            <td><?php echo htmlentities($row['dept']);?></td>
-                                            <td><?php echo htmlentities($row['section']);?></td>
-                                            <td><?php echo htmlentities($row['sem']);?></td>
-                                             <td><?php echo htmlentities($row['edate']);?></td>
+                                            <td><?php echo htmlentities($row['course_id']);?></td>
+                                            <td><?php echo htmlentities($row['title']);?></td>
+                                             <td><?php echo htmlentities($row['section_id']);?></td><!--
                                             <td>
-                                            <a href="print.php?id=<?php echo $row['cid']?>" target="_blank">
-<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                        
+                                            <a href="" target="_blank">
+
+                                            <a href="print.php?id=<?php// echo $row['cid']?>" target="_blank"> 
+<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                       
 
 
                                             </td>
-                                        </tr>
+                                        </tr>--> 
 <?php 
 $cnt++;
 } ?>

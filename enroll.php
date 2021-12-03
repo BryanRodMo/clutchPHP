@@ -10,13 +10,12 @@ else{
 if(isset($_POST['submit']))
 {
 $student_id=$_POST['student_id'];
-$pincode=$_POST['Pincode'];
-$session=$_POST['session'];
-$dept=$_POST['department'];
 $section=$_POST['section'];
 $course=$_POST['course'];
-$sem=$_POST['sem'];
-$ret=mysqli_query($bd, "insert into enrollments(student_id,pincode,session,department,section,course,semester) values('$student_id','$pincode','$session','$dept','$section','$course','$sem')");
+    $query="(INSERT INTO enrollments (student_id, course_id, section_id, status) 
+    VALUES (:student_id, :course, :section, :status");
+    /*
+$ret=mysqli_query($bd, "insert into enrollments(student_id,pincode,session,department,section,course,semester) values('$student_id','$pincode','$session','$dept','$section','$course','$sem')"); */
 if($ret)
 {
 $_SESSION['msg']="Enroll Successfully !!";

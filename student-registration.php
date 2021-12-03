@@ -1,6 +1,10 @@
 <?php
 session_start();
-include('includes/config.php');
+include "includes/config.php";
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
+
 
 
 if(isset($_POST['submit']))
@@ -9,10 +13,18 @@ $name=$_POST['name'];
 $student_id=$_POST['student_id'];
 $password=md5($_POST['password']);
 $year_of_study =$_POST['year_of_study'];
-$ret=mysqli_query($bd, "insert into student(name,student_id,password,year_of_study) values('$name','$student_id','$password','$year_of_study')");
-if($ret)
+$query=("insert into student (name,student_id,password,year_of_study) 
+        values(:name,:student_id,:password,:year_of_study)");
+$stmt=$pdo->prepare($query);
+$stmt->bindParam('name',$name);
+$stmt->bindParam('student_id',$student_id);
+$stmt->bindParam('password',$password);
+$stmt->bindParam('year_of_study',$year_of_study);
+$stmt->execute();
+
+if($stmt)
 {
-$extra="change-password.php";
+$extra="index.php";
 $host=$_SERVER['HTTP_HOST'];
 $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
 header("location:http://$host$uri/$extra");
