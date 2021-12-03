@@ -59,7 +59,7 @@ $stmt=$pdo->prepare($query);
 $delete=$stmt->execute([$_GET['id'],$_GET['cid']]);
 $_SESSION['delmsg']="Course deleted !!";
       }
-    else
+else
     {
         $_SESSION['delmsg']="";
 
