@@ -9,9 +9,9 @@ if(strlen($_SESSION['login'])==0) // or strlen($_SESSION['pcode'])==0)
 header('location:index.php');
 }
 else{
-if(isset($_POST['search'])){
+if(isset($_POST['search']) && $_POST['search'] != ""){
 $searchrequest= strtoupper($_POST['search']);
-var_dump($searchrequest);
+
 }
 if(isset($_POST['submit.student_id']))
 {
@@ -35,8 +35,34 @@ else
   $_SESSION['msg']="Error : Not Enroll";
 }
 }
-   
+if(isset($_GET['del']))
+      {
+              /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
+$query=("select * from student where student_id=?");
+$stmt = $pdo->prepare($query);
+$row = $stmt->execute([$_SESSION['login']]);
+$row=$stmt->fetch(PDO::FETCH_ASSOC);
+while($row= $stmt->fetch(PDO::FETCH_ASSOC))
+$student_id= $row['student_id'];
+
+$query=("DELETE FROM enrollments
+WHERE enrollments.student_id = ?
+AND enrollments.course_id = ?");
+$stmt=$pdo->prepare($query);
+$stmt->execute([$student_id,$_GET['id']]);
+ 
+
+
+      }
+else
+    {
+        $_SESSION['delmsg']="";
+
+    }
+
 ?>
+   
+
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -80,6 +106,7 @@ else
     $row = $stmt->execute([$_SESSION['login']]);
 //$sql=mysqli_query($bd, "select * from student where student_id='".$_SESSION['login']."'");
 $cnt=1;
+    
 //while($row=mysqli_fetch_array($sql))
     while($row= $stmt->fetch(PDO::FETCH_ASSOC))
 { ?>
@@ -112,7 +139,8 @@ $cnt=1;
     
  if(isset($searchrequest))
     {
-     
+    
+
      ?><p>Choose from:</p>
        <form method="post"><?php 
           /*  $sql=mysqli_query($bd, "SELECT * FROM `section` where course_id like '%$searchrequest%'");
@@ -123,7 +151,9 @@ $cnt=1;
             while($row= $stmt->fetch(PDO::FETCH_ASSOC))
      {?>
             
-                <input type="radio" id=" <?php echo htmlentities($row['course_id']); ?> "name="<?php echo htmlentities($row['course_id']); ?> "value="<?php echo htmlentities($row['section_id']); ?> " >
+                <input type="radio" id=" <?php echo htmlentities($row['course_id']); ?> "
+                name="<?php echo htmlentities($row['course_id']); ?> "
+                value="<?php echo htmlentities($row['section_id']); ?> " >
                 <label for="html"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
 
       <?php } if(isset($searchrequest)){ ?>
@@ -132,11 +162,75 @@ $cnt=1;
      
     <?php } ?>
     </form>
+      
 <?php } ?>
    <!-- <span id="course-availability-status1" style="font-size:12px;"> -->
   </div>
+                         
+ <strong>
+                          Courses Selected:
+                        </strong>
+                            <div class="table-responsive table-bordered">
+                    
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Course Name </th>
+                                             <th>Title</th>
+                                             <th>Section</th>
+                                             <!--<th>Action</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+<?php
+$query=("SELECT course.*, section.section_id, section.capacity
+FROM `course` INNER JOIN section 
+ON course.course_id = section.course_id 
+INNER JOIN enrollments 
+ON course.course_id = enrollments.course_id 
+where student_id=? && status=0");
+     $stmt=$pdo->prepare($query);
+     $stmt->execute([$_SESSION['login']]);
+$cnt=1;
+while($row = $stmt->fetch(PDO::FETCH_ASSOC))
+{
+?>
 
 
+                                        <tr>
+                                            <td><?php echo $cnt;?></td>
+                                            <td><?php echo htmlentities($row['course_id']);?></td>
+                                            <td><?php echo htmlentities($row['title']);?></td>
+                                             <td><?php echo htmlentities($row['section_id']);?></td>
+                                              <td>
+                                            
+  <a href="search_page.php?id=<?php echo $row['course_id']?>&del=delete" onClick="return confirm('Are you sure you want to drop this course?')">
+                                            <button class="btn btn-danger">Drop Request</button>
+</a>
+                                            </td>
+                                            
+                                            <!--
+                                            <td>
+                                            <a href="" target="_blank">
+
+                                            <a href="print.php?id=<?php// echo $row['cid']?>" target="_blank"> 
+<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                       
+
+
+                                            </td>
+                                        </tr>--> 
+<?php 
+$cnt++;
+} ?>
+
+                                        
+                                    </tbody>
+                                </table>
+                         
+                   
+
+                            </div>
 
 
                             </div>
