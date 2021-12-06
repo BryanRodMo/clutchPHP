@@ -115,7 +115,7 @@ $cnt=1;
                        <form name="dept" method="post" enctype="multipart/form-data">
    <div class="form-group">
     <label for="studentname">Student Name  </label>
-    <input type="text" class="form-control" id="studentname" name="studentname" value="<?php echo htmlentities($row['name']);?>"  />
+    <input type="text" class="form-control" id="studentname" name="studentname" value="<?php echo htmlentities($row['name']);?>" readonly />
   </div>
 
  <div class="form-group">
