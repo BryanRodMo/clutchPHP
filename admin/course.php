@@ -6,7 +6,7 @@ if ($pdo == false)
     die("ERROR: Unable to connect to database!");
 
 
-if(strlen($_SESSION['alogin'])==0)
+if(strlen($_SESSION['login'])==0)
     {   
 header('location:index.php');
 }
@@ -83,7 +83,7 @@ else
 <body>
 <?php include('includes/header.php');?>
     
-<?php if($_SESSION['alogin']!="")
+<?php if($_SESSION['login']!="")
 {
  include('includes/menubar.php');
 }

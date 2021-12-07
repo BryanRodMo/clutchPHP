@@ -17,7 +17,11 @@ $num=$sql->fetch(PDO::FETCH_ASSOC);
 
 if($num)
 {
-$extra="search_page.php";//
+  if($num['year_of_study']==0)
+    $extra="admin/course.php";
+  else{
+    $extra="search_page.php";//
+    } 
 $_SESSION['login']=$_POST['regno'];
 $_SESSION['id']=$num['student_id'];
 $_SESSION['sname']=$num['name'];
@@ -31,7 +35,7 @@ $stmt->bindParam('uip',$uip);
 $stmt->bindValue('logout',0);
 $stmt->bindParam('status',$status);
 $stmt->execute();
-    
+   
     
     /*
 $$log=mysqli_query("insert into userlog(student_id,userip,status)
