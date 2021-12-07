@@ -13,26 +13,30 @@ if(isset($_POST['search']) && $_POST['search'] != ""){
 $searchrequest= strtoupper($_POST['search']);
 
 }
-if(isset($_POST['submit.student_id']))
-{
+if(isset($_POST['save']))
+{ /*
 $student_id=$_POST['student_id'];
-$section=$_POST['section_id'];
-$course=$_POST['course_id'];
-$query=("insert into enrollments (student_id,section,course) 
-        values(:student_id,:section,:password,:course)");
+$section=$_POST['CIBI3001'];
+$course='CIBI3001';//$_POST['course_id'];
+$query=("insert into enrollments (student_id,course_id,section_id,status) 
+        values(:student_id,:course,:section,:status)");
 $stmt=$pdo->prepare($query);
 $stmt->bindParam('student_id',$student_id);
 $stmt->bindParam('section',$section);
 $stmt->bindParam('course',$course);
-$ret=$stmt->execute();
+$stmt->bindValue('status',0);
+
+$ret=$stmt->execute();*/
 //$ret=mysqli_query($bd, "insert into enrollments(student_id,section,course) values('$student_id','$section','$course')");
+var_dump($_POST['radio']);
+
 if($ret)
 {
-$_SESSION['msg']="Enroll Successfully !!";
+$_SESSION['msg']="Saved Successfully !!";
 }
 else
 {
-  $_SESSION['msg']="Error : Not Enroll";
+  $_SESSION['msg']="Error : Not Saved";
 }
 }
 if(isset($_GET['del']))
@@ -90,7 +94,8 @@ else
         <div class="container">
               <div class="row">
                     <div class="col-md-12">
-                        <h1 class="page-head-line">Course Enroll </h1>
+                        <h1 class="page-head-line">Course Enroll </h1>               <?php  var_dump($_POST['save']);?>
+
                     </div>
                 </div>
                 <div class="row" >
@@ -134,33 +139,54 @@ $cnt=1;
     <label for="Course">Course  </label>
     <input type="text" class="form-control" name="search" placeholder="Search..">  
      <button type="submit" name="submit" id="search" value="search" class="btn btn-default">Search Course</button>
-    
+    </form>
       <?php     
     
  if(isset($searchrequest))
     {
     
 
-     ?><p>Choose from:</p>
-       <form method="post"><?php 
+     ?><p>Choose from:</p><form method="post">
+  <?php 
           /*  $sql=mysqli_query($bd, "SELECT * FROM `section` where course_id like '%$searchrequest%'");
             while($row=mysqli_fetch_array($sql))*/
+     $prev_row="TEST3000";
+     $i=0;
      $query=("SELECT * FROM `section` where course_id like '%$searchrequest%'");
      $stmt = $pdo->prepare($query);
      $row = $stmt->execute();
             while($row= $stmt->fetch(PDO::FETCH_ASSOC))
-     {?>
+     {
             
-                <input type="radio" id=" <?php echo htmlentities($row['course_id']); ?> "
-                name="<?php echo htmlentities($row['course_id']); ?> "
-                value="<?php echo htmlentities($row['section_id']); ?> " >
-                <label for="html"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
+          if ($row['course_id'] == $prev_row) {
 
-      <?php } if(isset($searchrequest)){ ?>
-    <button type="submit" name="submit"  class="btn btn-default">Enroll</button>
-               <?php  var_dump($_POST['submit']);?>
+          echo '<input type = "radio" name = "radio[ ' . $i . ' ]" value = "' . $row['course_id'] . '-' . $row['section_id'] . ' ">';?>
+          <label for="course"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
+    <?php
+        } else {
+          $i += 1;
+          echo '<input type = "radio" name = "radio[ ' . $i . ' ]" value = "' . $row['course_id'] . '-' . $row['section_id'] . '">';?>
+          <label for="course"> <?php echo $row['course_id'].'-'.$row['section_id']; ?> </label><br>
+                           <?php
+
+        }
+        $prev_row = $row['course_id'];
+        ?>
+                           
+                           
+                           
+                           
+                           
+                           <!--
+                <input type="radio" id=" <?php// echo htmlentities($row['course_id']); ?> "
+                name="<?php// echo htmlentities($row['course_id']); ?> "
+                value="<?php// echo htmlentities($row['section_id']); ?> " >
+                <label for="course"> <?php// echo htmlentities($row['course_id']); ?> <?php// echo htmlentities($row['section_id']); ?> </label><br>
+-->
+      <?php } ?>
+    <button type="submit" name="save"  class="btn btn-default">Save</button>
      
-    <?php } ?>
+  
     </form>
       
 <?php } ?>
