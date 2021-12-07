@@ -50,7 +50,7 @@ else
 if(isset($_GET['del']))
       {
               /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
-$query=("delete course.*, section.*
+$query=("delete course.*, section.*, enrollments.*
 FROM course INNER JOIN section 
 ON course.course_id = section.course_id 
 INNER JOIN enrollments 

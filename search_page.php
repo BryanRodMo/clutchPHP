@@ -77,20 +77,12 @@ else
 if(isset($_GET['del']))
       {
               /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
-$query=("select * from student where student_id=?");
-$stmt = $pdo->prepare($query);
-$row = $stmt->execute([$_SESSION['login']]);
-$row=$stmt->fetch(PDO::FETCH_ASSOC);
-while($row= $stmt->fetch(PDO::FETCH_ASSOC))
-$student_id= $row['student_id'];
-
-$query=("DELETE FROM enrollments
-WHERE enrollments.student_id = ?
-AND enrollments.course_id = ?");
+$query=("delete enrollments
+FROM enrollments
+where enrollments.section_id=? && enrollments.course_id=? && enrollments.student_id=?");
 $stmt=$pdo->prepare($query);
-$stmt->execute([$student_id,$_GET['id']]);
- 
-
+$stmt->execute([$_GET['cid'],$_GET['sid'], $_SESSION['id']]);
+$_SESSION['delmsg']="Course deleted !!";
 
       }
 else
@@ -266,7 +258,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                              <td><?php echo htmlentities($row['section_id']);?></td>
                                               <td>
                                             
-  <a href="search_page.php?id=<?php echo $row['course_id']?>&del=delete" onClick="return confirm('Are you sure you want to drop this course?')">
+  <a href="search_page.php?sid=<?php echo $row['section_id']?>&cid=<?php echo$row['course_id'] ?>&del=delete" onClick="return confirm('Are you sure you want to drop request?')">
                                             <button class="btn btn-danger">Drop Request</button>
 </a>
                                             </td>
