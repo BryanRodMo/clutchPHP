@@ -94,7 +94,7 @@ else
         <div class="container">
               <div class="row">
                     <div class="col-md-12">
-                        <h1 class="page-head-line">Course Enroll </h1>               <?php  var_dump($_POST['save']);?>
+                        <h1 class="page-head-line">Course Enroll </h1>               
 
                     </div>
                 </div>
