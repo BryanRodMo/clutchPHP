@@ -182,7 +182,7 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC))
                                              <td><?php echo htmlentities($row['capacity']);?></td>
                     
                                             <td>
-                                            <a href="edit-course.php?id=<?php echo $row['id']?>">
+                                            <a href="edit-course.php?id=<?php echo $row['course_id']?>&sec_id=<?php echo $row['section_id']?>">
 <button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> </a>                                        
   <a href="course.php?id=<?php echo $row['section_id']?>&cid=<?php echo$row['course_id'] ?>&del=delete" onClick="return confirm('Are you sure you want to delete?')">
                                             <button class="btn btn-danger">Delete</button>

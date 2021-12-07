@@ -1,21 +1,30 @@
 <?php
 session_start();
 include('includes/config.php');
-if(strlen($_SESSION['alogin'])==0)
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
+
+if(strlen($_SESSION['login'])==0)
     {   
 header('location:index.php');
 }
 else{
-$id=intval($_GET['id']);
-date_default_timezone_set('Asia/Kolkata');
-$currentTime = date( 'd-m-Y h:i:s A', time () );
+$id=$_GET['id'];
+$section_id=$_GET['sec_id'];
+
 if(isset($_POST['submit']))
 {
-$coursecode=$_POST['coursecode'];
-$coursename=$_POST['coursename'];
-$courseunit=$_POST['courseunit'];
-$seatlimit=$_POST['seatlimit'];
-$ret=mysqli_query($bd, "update course set courseCode='$coursecode',courseName='$coursename',courseUnit='$courseunit',noofSeats='$seatlimit',updationDate='$currentTime' where id='$id'");
+$capacity=$_POST['seatlimit'];
+$newsection_id=$_POST['section_id'];
+
+
+$query=("UPDATE section
+set section_id=?, capacity=?
+where course_id='$id' && section_id='$section_id'");
+$stmt=$pdo->prepare($query);
+$stmt->execute([$newsection_id,$capacity]);
+$ret=$stmt;
 if($ret)
 {
 $_SESSION['msg']="Course Updated Successfully !!";
@@ -43,7 +52,7 @@ else
 <body>
 <?php include('includes/header.php');?>
     
-<?php if($_SESSION['alogin']!="")
+<?php if($_SESSION['login']!="")
 {
  include('includes/menubar.php');
 }
@@ -69,30 +78,35 @@ else
                         <div class="panel-body">
                        <form name="dept" method="post">
 <?php
-$sql=mysqli_query($bd, "select * from course where id='$id'");
+$query=("SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id where section.course_id='$id' && section.section_id='$section_id'");
+$stmt=$pdo->prepare($query);
+$stmt->execute(); 
 $cnt=1;
-while($row=mysqli_fetch_array($sql))
+while($row=$stmt->fetch(PDO::FETCH_ASSOC))
 {
 ?>
-<p><b>Last Updated at</b> :<?php echo htmlentities($row['updationDate']);?></p>
    <div class="form-group">
     <label for="coursecode">Course Code  </label>
-    <input type="text" class="form-control" id="coursecode" name="coursecode" placeholder="Course Code" value="<?php echo htmlentities($row['courseCode']);?>" required />
+    <input type="text" class="form-control" id="coursecode" name="coursecode" placeholder="Course Code" value="<?php echo htmlentities($row['course_id']);?>" readonly required />
   </div>
 
  <div class="form-group">
     <label for="coursename">Course Name  </label>
-    <input type="text" class="form-control" id="coursename" name="coursename" placeholder="Course Name" value="<?php echo htmlentities($row['courseName']);?>" required />
+    <input type="text" class="form-control" id="coursename" name="coursename" placeholder="Course Name" value="<?php echo htmlentities($row['title']);?>" readonly required />
   </div>
 
 <div class="form-group">
-    <label for="courseunit">Course unit  </label>
-    <input type="text" class="form-control" id="courseunit" name="courseunit" placeholder="Course Unit" value="<?php echo htmlentities($row['courseUnit']);?>" required />
+    <label for="courseunit">Credits</label>
+    <input type="text" class="form-control" id="courseunit" name="courseunit" placeholder="Course Credits" value="<?php echo htmlentities($row['credits']);?>" readonly required />
+  </div>  
+<div class="form-group">
+    <label for="Section">Section</label>
+    <input type="text" class="form-control" id="Section" name="section_id" placeholder="Section" value="<?php echo htmlentities($row['section_id']);?>" required />
   </div>  
 
 <div class="form-group">
-    <label for="seatlimit">Seat limit  </label>
-    <input type="text" class="form-control" id="seatlimit" name="seatlimit" placeholder="Seat limit" value="<?php echo htmlentities($row['noofSeats']);?>" required />
+    <label for="seatlimit">Capacity  </label>
+    <input type="text" class="form-control" id="seatlimit" name="seatlimit" placeholder="Seat limit" value="<?php echo htmlentities($row['capacity']);?>" required />
   </div>  
 
 
