@@ -29,7 +29,42 @@ $stmt->bindValue('status',0);
 $ret=$stmt->execute();*/
 //$ret=mysqli_query($bd, "insert into enrollments(student_id,section,course) values('$student_id','$section','$course')");
 var_dump($_POST['radio']);
+if (!empty($_POST['radio'])) {
+   $array = $_POST['radio'];
+   $implodeArray  = implode('-',$array) ;
+   $explodeArray = explode('-', $implodeArray);
+   $i = 0;
+   $j = 1;
+   $status = 0;
+   $count = count($explodeArray);
+   $count = $count / 2;
 
+   for($x = 0; $x < $count ; $x++)
+   {
+
+      $sql = "INSERT INTO enrollments (student_id, course_id, section_id, status)
+      VALUES (:student_id, :course_id, :section_id, :status)";
+
+          $stmt = $pdo->prepare($sql);
+          $stmt->execute(array(
+              ':student_id' => $_SESSION['id'],
+              ':course_id' => $explodeArray[$i],
+              ':section_id' => $explodeArray[$i + 1],
+              ':status' => $status
+          ));
+
+
+          $sql2 = "UPDATE  section SET capacity = capacity - 1
+                   WHERE section_id = :section_id AND course_id = :course_id";
+
+                       $stmt = $pdo->prepare($sql2);
+                       $stmt->execute(array(":section_id" => $explodeArray[$i + 1],":course_id" => $explodeArray[$i] ));
+                       $i = $i + 2;
+
+   }
+   header('location: enroll-history.php');
+
+}
 if($ret)
 {
 $_SESSION['msg']="Saved Successfully !!";
