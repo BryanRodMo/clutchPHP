@@ -6,14 +6,8 @@
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                              <li><a href="search_page.php">Enroll for Course </a></li>
                              <li><a href="enroll-history.php">Enroll History  </a></li>
-                              <li><a href="">My Profile</a></li>
-                               <li><a href="">Change Password</a></li>
                             <li><a href="logout.php">Logout</a></li>
-<!-- <li><a href="search_page.php">Enroll for Course </a></li>
-                             <li><a href="enroll-history.php">Enroll History  </a></li>
-                              <li><a href="my-profile.php">My Profile</a></li>
-                               <li><a href="change-password.php">Change Password</a></li>
-                            <li><a href="logout.php">Logout</a></li> -->
+
                         </ul>
                     </div>
                 </div>

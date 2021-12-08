@@ -18,7 +18,7 @@ $num=$sql->fetch(PDO::FETCH_ASSOC);
 if($num)
 {
   if($num['year_of_study']==0)
-    $extra="admin/course.php";
+    $extra="admin/search_page.php";
   else{
     $extra="search_page.php";//
     } 

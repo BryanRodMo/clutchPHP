@@ -28,7 +28,8 @@ $stmt->bindValue('status',0);
 
 $ret=$stmt->execute();*/
 //$ret=mysqli_query($bd, "insert into enrollments(student_id,section,course) values('$student_id','$section','$course')");
-var_dump($_POST['radio']);
+
+
 if (!empty($_POST['radio'])) {
    $array = $_POST['radio'];
    $implodeArray  = implode('-',$array) ;
@@ -38,7 +39,6 @@ if (!empty($_POST['radio'])) {
    $status = 0;
    $count = count($explodeArray);
    $count = $count / 2;
-
    for($x = 0; $x < $count ; $x++)
    {
 
@@ -62,7 +62,7 @@ if (!empty($_POST['radio'])) {
                        $i = $i + 2;
 
    }
-   header('location: enroll-history.php');
+   header('location: search_page.php');
 
 }
 if($ret)
@@ -81,9 +81,13 @@ $query=("delete enrollments
 FROM enrollments
 where enrollments.section_id=? && enrollments.course_id=? && enrollments.student_id=?");
 $stmt=$pdo->prepare($query);
-$stmt->execute([$_GET['cid'],$_GET['sid'], $_SESSION['id']]);
+$stmt->execute([$_GET['sid'],$_GET['cid'], $_SESSION['id']]);
 $_SESSION['delmsg']="Course deleted !!";
-
+$sql2 = "UPDATE  section SET capacity = capacity + 1
+        WHERE section_id = :section_id AND course_id = :course_id";
+$stmt = $pdo->prepare($sql2);
+$stmt->execute(array(":section_id" => $_GET['sid'],":course_id" => $_GET['cid'] ));
+$i = $i + 2;
       }
 else
     {

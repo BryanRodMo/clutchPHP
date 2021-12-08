@@ -4,12 +4,13 @@
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
+                            <li><a href="search_page.php">Browse Courses</a></li>
                              <li><a href="course.php">Course</a></li>
                               <!--<li><a href="student-registration.php">Registration</a></li>
                                <li><a href="manage-students.php">Manage Students</a></li>
                                <li><a href="enroll-history.php">Enroll History</a></li>
-                               <li><a href="user-log.php">Student Logs </a></li>
-                            <li><a href="logout.php">Logout</a></li> -->
+                               <li><a href="user-log.php">Student Logs </a></li>-->
+                            <li><a href="logout.php">Logout</a></li>
 
                         </ul>
                     </div>
