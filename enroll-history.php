@@ -57,11 +57,11 @@ else{
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Course Name </th>
-                                             <th>Title</th>
-                                             <th>Section</th>
-                                            <th>status</th>
+                                            <td><b>#</b></td>
+                                            <td><b>Course Name</b> </td>
+                                             <td><b>Title</b></td>
+                                             <td><b>Section</b></td>
+                                            <td><b>status</b></td>
 
                                              <!--<th>Action</th>-->
                                         </tr>
@@ -87,7 +87,15 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo htmlentities($row['course_id']);?></td>
                                             <td><?php echo htmlentities($row['title']);?></td>
                                              <td><?php echo htmlentities($row['section_id']);?></td>
-                                            <td><?php echo htmlentities($row['status']);?></td><!--
+                                            <?php						if($row['status']==0){?>
+                                            <td><?php echo "PENDING";?></td>
+<?php } else if($row['status']==1){?>
+ <td><?php echo "SUCCESSFUL";?></td>
+<?php}  else{?>
+ <td><?php echo "UNSUCCESSFUL";?></td>
+<?php } ?>
+
+                                           <!--
 <!--
                                             <td>
                                             <a href="" target="_blank">
@@ -100,9 +108,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                         </tr>--> 
 <?php 
 $cnt++;
-} ?>
-
-                                        
+} ?>                                                                           
                                     </tbody>
                                 </table>
                             </div>

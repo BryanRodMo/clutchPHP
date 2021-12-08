@@ -57,23 +57,18 @@ else{
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Course Name </th>
-                                             <th>Title</th>
-                                             <th>Section</th>
-                                            <th>status</th>
-
+                                           <td><strong>#</strong></td>
+                                           <td><strong>Course Name </strong></td>
+                                           <td><strong>Title</strong></td>
+                                           <td><strong>Section</strong></td>
+                                           <td><strong>status</strong></td>
+					    
                                              <!--<th>Action</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
 <?php
-$query=("SELECT course.*, section.section_id, section.capacity, enrollments.status
-FROM `course` INNER JOIN section 
-ON course.course_id = section.course_id 
-INNER JOIN enrollments 
-ON course.course_id = enrollments.course_id 
-where student_id=?");
+$query=("SELECT * FROM enrollments");
      $stmt=$pdo->prepare($query);
      $stmt->execute([$_SESSION['login']]);
 $cnt=1;
@@ -84,28 +79,37 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 
                                         <tr>
                                             <td><?php echo $cnt;?></td>
+                                            <td><?php echo htmlentities($row['student_id']);?></td>
                                             <td><?php echo htmlentities($row['course_id']);?></td>
-                                            <td><?php echo htmlentities($row['title']);?></td>
                                              <td><?php echo htmlentities($row['section_id']);?></td>
-                                            <td><?php echo htmlentities($row['status']);?></td><!--
-<!--
-                                            <td>
-                                            <a href="" target="_blank">
+<?php						if($row['status']==0){?>
+                                            <td><?php echo "PENDING";?></td>
+<?php } else if($row['status']==1){?>
+ <td><?php echo "SUCCESSFUL";?></td>
+<?php}  else{?>
+ <td><?php echo "UNSUCCESSFUL";?></td>
+<?php } ?>
 
-                                            <a href="print.php?id=<?php// echo $row['cid']?>" target="_blank"> 
-<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                       
+                                                                    
 
 
-                                            </td>
-                                        </tr>--> 
+ 
 <?php 
 $cnt++;
 } ?>
 
+                                                
+                                                       
                                         
                                     </tbody>
                                 </table>
+                                <div class="panel-body">
+                                <a>
+                                    <button name="enroll" type="submit" value="enroll_all" class="btn btn-primary"><i class=" fa fa-refresh "></i> ENROLLL</button> </a> </div>
+                                
+                              
                             </div>
+                            
                         </div>
                     </div>
                    
