@@ -1,7 +1,10 @@
 <?php
 session_start();
 include('includes/config.php');
-if(strlen($_SESSION['alogin'])==0)
+$pdo=connectDB();
+if ($pdo == false)
+    die("ERROR: Unable to connect to database!");
+if(strlen($_SESSION['login'])==0)
     {   
 header('location:index.php');
 }
@@ -26,13 +29,13 @@ else{
 
 <body>
 <?php include('includes/header.php');?>
-    
-<?php if($_SESSION['alogin']!="")
+  
+<?php if($_SESSION['login']!="")
 {
  include('includes/menubar.php');
 }
  ?>
-    
+
     <div class="content-wrapper">
         <div class="container">
               <div class="row">
@@ -43,53 +46,58 @@ else{
                 <div class="row" >
             
                 <div class="col-md-12">
-                    
+                   
                     <div class="panel panel-default">
                         <div class="panel-heading">
                            Enroll History
                         </div>
-                       
+                      
                         <div class="panel-body">
                             <div class="table-responsive table-bordered">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                                 <th>Student Name </th>
-                                                    <th>Student Reg no </th>
                                             <th>Course Name </th>
-                                            <th>Session </th>
-                                            
-                                                <th>Semester</th>
-                                             <th>Enrollment Date</th>
-                                             <th>Action</th>
+                                             <th>Title</th>
+                                             <th>Section</th>
+                                            <th>status</th>
+
+                                             <!--<th>Action</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
 <?php
-$sql=mysqli_query($bd, "select courseenrolls.course as cid, course.courseName as courname,session.session as session,department.department as dept,courseenrolls.enrollDate as edate ,semester.semester as sem,students.studentName as sname,students.StudentRegno as sregno from courseenrolls join course on course.id=courseenrolls.course join session on session.id=courseenrolls.session join department on department.id=courseenrolls.department   join semester on semester.id=courseenrolls.semester join students on students.StudentRegno=courseenrolls.studentRegno ");
+$query=("SELECT course.*, section.section_id, section.capacity, enrollments.status
+FROM `course` INNER JOIN section 
+ON course.course_id = section.course_id 
+INNER JOIN enrollments 
+ON course.course_id = enrollments.course_id 
+where student_id=?");
+     $stmt=$pdo->prepare($query);
+     $stmt->execute([$_SESSION['login']]);
 $cnt=1;
-while($row=mysqli_fetch_array($sql))
+while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 {
 ?>
 
 
                                         <tr>
                                             <td><?php echo $cnt;?></td>
-                                              <td><?php echo htmlentities($row['sname']);?></td>
-                                            <td><?php echo htmlentities($row['sregno']);?></td>
-                                            <td><?php echo htmlentities($row['courname']);?></td>
-                                            <td><?php echo htmlentities($row['dept']);?></td>
-                                          
-                                            <td><?php echo htmlentities($row['sem']);?></td>
-                                             <td><?php echo htmlentities($row['edate']);?></td>
+                                            <td><?php echo htmlentities($row['course_id']);?></td>
+                                            <td><?php echo htmlentities($row['title']);?></td>
+                                             <td><?php echo htmlentities($row['section_id']);?></td>
+                                            <td><?php echo htmlentities($row['status']);?></td><!--
+<!--
                                             <td>
-                                            <a href="print.php?id=<?php echo $row['cid']?>" target="_blank">
-<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                        
+                                            <a href="" target="_blank">
+
+                                            <a href="print.php?id=<?php// echo $row['cid']?>" target="_blank"> 
+<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                       
 
 
                                             </td>
-                                        </tr>
+                                        </tr>--> 
 <?php 
 $cnt++;
 } ?>
@@ -100,7 +108,7 @@ $cnt++;
                             </div>
                         </div>
                     </div>
-                     
+                   
                 </div>
             </div>
 
@@ -112,7 +120,7 @@ $cnt++;
     </div>
    
   <?php include('includes/footer.php');?>
-    
+   
     <script src="assets/js/jquery-1.11.1.js"></script>
     
     <script src="assets/js/bootstrap.js"></script>

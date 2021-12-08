@@ -61,12 +61,14 @@ else{
                                             <th>Course Name </th>
                                              <th>Title</th>
                                              <th>Section</th>
+                                            <th>status</th>
+
                                              <!--<th>Action</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
 <?php
-$query=("SELECT course.*, section.section_id, section.capacity
+$query=("SELECT course.*, section.section_id, section.capacity, enrollments.status
 FROM `course` INNER JOIN section 
 ON course.course_id = section.course_id 
 INNER JOIN enrollments 
@@ -84,7 +86,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo $cnt;?></td>
                                             <td><?php echo htmlentities($row['course_id']);?></td>
                                             <td><?php echo htmlentities($row['title']);?></td>
-                                             <td><?php echo htmlentities($row['section_id']);?></td><!--
+                                             <td><?php echo htmlentities($row['section_id']);?></td>
+                                            <td><?php echo htmlentities($row['status']);?></td><!--
+<!--
                                             <td>
                                             <a href="" target="_blank">
 
