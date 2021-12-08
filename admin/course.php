@@ -47,7 +47,7 @@ else
   $_SESSION['msg']="Error : Course not created";
 }
 }
-if(isset($_GET['del']))
+if(isset($_GET['del']))        
       {
               /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
 $query=("delete course.*, section.*
