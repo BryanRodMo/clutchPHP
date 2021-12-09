@@ -68,12 +68,10 @@ else{
                                     </thead>
                                     <tbody>
 <?php
-$query=("SELECT course.*, section.section_id, section.capacity, enrollments.status
-FROM `course` INNER JOIN section 
-ON course.course_id = section.course_id 
-INNER JOIN enrollments 
+$query=("SELECT course.*, enrollments.section_id
+FROM `course` INNER JOIN enrollments 
 ON course.course_id = enrollments.course_id 
-where student_id=?");
+where enrollments.student_id=?");
      $stmt=$pdo->prepare($query);
      $stmt->execute([$_SESSION['login']]);
 $cnt=1;
@@ -87,13 +85,13 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo htmlentities($row['course_id']);?></td>
                                             <td><?php echo htmlentities($row['title']);?></td>
                                              <td><?php echo htmlentities($row['section_id']);?></td>
-                                            <?php						if($row['status']==0){?>
+                                            <?php if($row['status']==0){?>
                                             <td><?php echo "PENDING";?></td>
 <?php } else if($row['status']==1){?>
  <td><?php echo "SUCCESSFUL";?></td>
-<!-- <?php}  else{?>
- <td><?php //echo "UNSUCCESSFUL";?></td>
-<?php } ?>-->
+ <?php}  else{?>
+ <td><?php echo "UNSUCCESSFUL";?></td>
+<?php } ?>
 
                                          
 <?php 

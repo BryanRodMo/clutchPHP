@@ -88,9 +88,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo "PENDING";?></td>
                                             <?php } else if($row['status']==1){?>
                                             <td><?php echo "SUCCESSFUL";?></td>
-                                            <!--<?php}  else{?>
- <td><?php //echo "UNSUCCESSFUL";?></td>
-<?php } ?>-->
+                                            <?php}  else{?>
+                                                            <td><?php echo "UNSUCCESSFUL";?></td>
+                                                   <?php } ?>
 
                                                                     
 
@@ -115,14 +115,36 @@ $cnt++;
 if(isset($_POST['enroll']))
 {
 
+    for($i = 5; $i > 0 ; $i--){
+        
+        $query=("SELECT student_id FROM `student` where year_of_study='$i'"); //grab students from each year of study
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        while($row= $stmt->fetch(PDO::FETCH_ASSOC)){
+            
+        $query=("SELECT enrollments.student_id, section.* FROM `section` inner join enrollments on section.section_id = enrollments.section_id  where enrollments.student_id=? && enrollments.status='0' having section.capacity>0"); //get student_id, courses and sections of student that hasn't enroll
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([$row['student_id']]);
+        while($check2= $stmt->fetch(PDO::FETCH_ASSOC)){
 
-$query=("UPDATE enrollments set status=1 where status=0");
-$stmt=$pdo->prepare($query);
-$stmt->execute();
-$ret=$stmt;
-
-
-
+        $query=("UPDATE enrollments set status=1 where student_id=? && course_id=? && section_id=?"); // update the ones with capacity available to 1
+        $stmt=$pdo->prepare($query);
+        $stmt->execute([$check2['student_id'],$check2['course_id'],$check2['section_id']]);
+        
+        
+        $query2 = "UPDATE  section SET capacity = capacity - 1
+                   WHERE section_id =? AND course_id = ?"; // update the capacity of the students that did enroll
+        $stmt = $pdo->prepare($query2);
+        $stmt->execute([$check2['section_id'],$check2['course_id']]);
+                    
+                }
+        
+                    
+        }
+    }
+        $query=("UPDATE enrollments set status=2 where status=0"); // update the ones with no capacity available to 2
+        $stmt=$pdo->prepare($query);
+        $stmt->execute();
 }
      
 ?>      

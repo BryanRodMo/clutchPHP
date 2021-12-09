@@ -14,12 +14,18 @@ else{
 
 if(isset($_POST['submit']))
 {
+
 $coursecode=$_POST['coursecode'];
 $coursename=$_POST['coursename'];
 $courseunit=$_POST['courseunit'];
 $coursesection=$_POST['coursesection'];
 $seatlimit=$_POST['seatlimit'];
     
+$query=("SELECT * FROM `course` where course_id=?");
+$stmt2 = $pdo->prepare($query);
+$stmt2->execute([$_POST['coursecode']]);
+$check = $stmt2->fetch(PDO::FETCH_ASSOC);
+if(empty($check)){
 $query=("insert into course (course_id,title,credits) 
             values(:coursecode,:coursename,:courseunit)");
 $stmt=$pdo->prepare($query);
@@ -27,7 +33,7 @@ $stmt->bindParam('coursecode',$coursecode);
 $stmt->bindParam('coursename',$coursename);
 $stmt->bindParam('courseunit',$courseunit);
 $ret=$stmt->execute();
-    
+    }
 $query=("insert into section (course_id,section_id,capacity)
         values(:coursecode,:coursesection,:capacity)");
 $stmt=$pdo->prepare($query);
@@ -48,14 +54,25 @@ else
 }
 if(isset($_GET['del']))        
       {
-$query=("delete course.*, section.*
-FROM course INNER JOIN section 
-ON course.course_id = section.course_id 
-INNER JOIN enrollments 
-where section.section_id=? && course.course_id=? ");
+$query=("SELECT * FROM `enrollments` where course_id=? && section_id=?");
+$stmt2 = $pdo->prepare($query);
+$stmt2->execute([$_GET['cid'],$_GET['id']]);
+$check = $stmt2->fetch(PDO::FETCH_ASSOC);
+if(!empty($check)) {
+$query=("delete enrollments.*
+from enrollments
+where section_id=? && course_id=?");
 $stmt=$pdo->prepare($query);
 $delete=$stmt->execute([$_GET['id'],$_GET['cid']]);
-$_SESSION['delmsg']="Course deleted !!";
+}
+$query=("delete section.*
+from section
+where section_id=? && course_id=?");
+$stmt=$pdo->prepare($query);
+$delete=$stmt->execute([$_GET['id'],$_GET['cid']]);
+
+
+
       }
 else
     {

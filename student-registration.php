@@ -13,6 +13,7 @@ $name=$_POST['name'];
 $student_id=$_POST['student_id'];
 $password=md5($_POST['password']);
 $year_of_study =$_POST['year_of_study'];
+    
 $query=("insert into student (name,student_id,password,year_of_study) 
         values(:name,:student_id,:password,:year_of_study)");
 $stmt=$pdo->prepare($query);

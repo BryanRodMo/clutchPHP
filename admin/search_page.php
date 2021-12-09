@@ -126,7 +126,7 @@ $cnt=1;
                     
                                             <td>
                                              <a href="edit-course.php?id=<?php echo $row['course_id']?>&sec_id=<?php echo $row['section_id']?>">
-                                                 <button class="btn btn-primary"><i class=" fa fa-refresh "></i> Add Section</button> </a>
+                                                 <button class="btn btn-primary"><i class=" fa fa-refresh "></i> Edit Section</button> </a>
                                             </td>
                                         </tr>
 <?php 

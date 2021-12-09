@@ -39,13 +39,7 @@ if (!empty($_POST['radio'])) {
           ));
 
 
-          $query2 = "UPDATE  section SET capacity = capacity - 1
-                   WHERE section_id = :section_id AND course_id = :course_id";
-
-                       $stmt = $pdo->prepare($query2);
-                       $stmt->execute(array(":section_id" => $explArray[$i + 1],":course_id" => $explArray[$i] ));
-                       $i = $i + 2;
-
+          
    }
    header('location: search_page.php');
 
@@ -67,11 +61,7 @@ where enrollments.section_id=? && enrollments.course_id=? && enrollments.student
 $stmt=$pdo->prepare($query);
 $stmt->execute([$_GET['sid'],$_GET['cid'], $_SESSION['id']]);
 $_SESSION['delmsg']="Course deleted !!";
-$sql2 = "UPDATE  section SET capacity = capacity + 1
-        WHERE section_id = :section_id AND course_id = :course_id";
-$stmt = $pdo->prepare($sql2);
-$stmt->execute(array(":section_id" => $_GET['sid'],":course_id" => $_GET['cid'] ));
-$i = $i + 2;
+
       }
 else
     {
@@ -229,10 +219,8 @@ $cnt=1;
                                     </thead>
                                     <tbody>
 <?php
-$query=("SELECT course.*, section.section_id, section.capacity
-FROM `course` INNER JOIN section 
-ON course.course_id = section.course_id 
-INNER JOIN enrollments 
+$query=("SELECT course.*, enrollments.section_id
+FROM `course` INNER JOIN enrollments 
 ON course.course_id = enrollments.course_id 
 where enrollments.student_id=? && enrollments.status=0");
      $stmt=$pdo->prepare($query);
