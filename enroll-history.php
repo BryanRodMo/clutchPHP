@@ -91,9 +91,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo "PENDING";?></td>
 <?php } else if($row['status']==1){?>
  <td><?php echo "SUCCESSFUL";?></td>
-<?php}  else{?>
- <td><?php echo "UNSUCCESSFUL";?></td>
-<?php } ?>
+<!-- <?php}  else{?>
+ <td><?php //echo "UNSUCCESSFUL";?></td>
+<?php } ?>-->
 
                                          
 <?php 

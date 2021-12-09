@@ -13,6 +13,8 @@ else{
 
 
 ?>
+                             
+      
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -86,9 +88,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo "PENDING";?></td>
                                             <?php } else if($row['status']==1){?>
                                             <td><?php echo "SUCCESSFUL";?></td>
-                                            <?php}  else{?>
- <td><?php echo "UNSUCCESSFUL";?></td>
-<?php } ?>
+                                            <!--<?php}  else{?>
+ <td><?php //echo "UNSUCCESSFUL";?></td>
+<?php } ?>-->
 
                                                                     
 
@@ -104,10 +106,26 @@ $cnt++;
                                     </tbody>
                                 </table>
                                 <div class="panel-body">
+                                    <form name="enroll" method="post">
                                 <a>
-                                    <button name="enroll" type="submit" value="enroll_all" class="btn btn-primary"><i class=" fa fa-refresh "></i> ENROLLL</button> </a> </div>
+                                    <button name="enroll" type="submit" value="enroll" class="btn btn-primary"><i class=" fa fa-refresh "></i> ENROLL</button> </a></form> </div>
                                 
-                              
+                          
+                           <?php
+if(isset($_POST['enroll']))
+{
+
+
+$query=("UPDATE enrollments set status=1 where status=0");
+$stmt=$pdo->prepare($query);
+$stmt->execute();
+$ret=$stmt;
+
+
+
+}
+     
+?>      
                             </div>
                             
                         </div>
