@@ -27,11 +27,35 @@ $stmt->execute([$newsection_id,$capacity]);
 $ret=$stmt;
 if($ret)
 {
+
 $_SESSION['msg']="Course Updated Successfully !!";
 }
 else
 {
   $_SESSION['msg']="Error : Course not Updated";
+}
+}
+if(isset($_POST['addsec']))
+{
+$capacity=$_POST['seatlimit'];
+$newsection_id=$_POST['section_id'];
+$section_id=$_POST['section_id'];
+
+
+$query=("insert into section (course_id,section_id,capacity)
+        values(:coursecode,:coursesection,:capacity)");
+$stmt=$pdo->prepare($query);
+$stmt->bindParam('coursecode',$id);
+$stmt->bindParam('coursesection',$newsection_id);
+$stmt->bindParam('capacity',$capacity);
+$ret=$stmt->execute();;
+if($ret)
+{
+$_SESSION['msg']="Section Created Successfully !!";
+}
+else
+{
+  $_SESSION['msg']="Error : Course not Created";
 }
 }
 ?>
@@ -111,7 +135,9 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC))
 
 
 <?php } ?>
- <button type="submit" name="submit" class="btn btn-default"><i class=" fa fa-refresh "></i> Update</button>
+ <button type="submit" name="addsec" class="btn btn-default"><i class=" fa fa-edit "></i> Add Section</button>
+<button type="submit" name="submit" class="btn btn-default"><i class=" fa fa-refresh "></i> Update</button>
+
 </form>
                             </div>
                             </div>

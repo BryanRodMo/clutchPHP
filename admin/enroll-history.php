@@ -70,7 +70,7 @@ else{
 <?php
 $query=("SELECT * FROM enrollments");
      $stmt=$pdo->prepare($query);
-     $stmt->execute([$_SESSION['login']]);
+     $stmt->execute();
 $cnt=1;
 while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 {

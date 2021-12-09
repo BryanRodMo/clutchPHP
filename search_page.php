@@ -186,21 +186,36 @@ $cnt=1;
      $query=("SELECT * FROM `section` where course_id like '%$searchrequest%'");
      $stmt = $pdo->prepare($query);
      $row = $stmt->execute();
+    
             while($row= $stmt->fetch(PDO::FETCH_ASSOC))
      {
-            
+            $query=("SELECT * FROM `enrollments` where course_id=? && student_id=?");
+            $stmt2 = $pdo->prepare($query);
+            $stmt2->execute([$row['course_id'],$_SESSION['id']]);
+            $check = $stmt2->fetch(PDO::FETCH_ASSOC);
           if ($row['course_id'] == $prev_row) {
-
+              if(!empty($check)){
+                            echo '<input type = "radio" name = "radio[ ' . $i . ' ]" value = "' . $row['course_id'] . '-' . $row['section_id'] . ' " disabled>';?>
+          <label for="course"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
+        <?php }
+              else{
           echo '<input type = "radio" name = "radio[ ' . $i . ' ]" value = "' . $row['course_id'] . '-' . $row['section_id'] . ' ">';?>
           <label for="course"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
-    <?php
+                           
+    <?php }
         } else {
+               if(!empty($check)){
+                $i += 1;
+                            echo '<input type = "radio" name = "radio[ ' . $i . ' ]" value = "' . $row['course_id'] . '-' . $row['section_id'] . ' " disabled>';?>
+          <label for="course"> <?php echo htmlentities($row['course_id']); ?> <?php echo htmlentities($row['section_id']); ?> </label><br>
+             <?php }
+              else{
           $i += 1;
           echo '<input type = "radio" name = "radio[ ' . $i . ' ]" value = "' . $row['course_id'] . '-' . $row['section_id'] . '">';?>
           <label for="course"> <?php echo $row['course_id'].'-'.$row['section_id']; ?> </label><br>
                            <?php
 
-        }
+        }}
         $prev_row = $row['course_id'];
         ?>
                            
@@ -246,7 +261,7 @@ FROM `course` INNER JOIN section
 ON course.course_id = section.course_id 
 INNER JOIN enrollments 
 ON course.course_id = enrollments.course_id 
-where student_id=? && status=0");
+where enrollments.student_id=? && enrollments.status=0");
      $stmt=$pdo->prepare($query);
      $stmt->execute([$_SESSION['login']]);
 $cnt=1;
