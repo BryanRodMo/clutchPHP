@@ -4,7 +4,7 @@ include('includes/config.php');
 $pdo=connectDB();
 if ($pdo == false)
     die("ERROR: Unable to connect to database!");
-if(strlen($_SESSION['login'])==0) // or strlen($_SESSION['pcode'])==0)
+if(strlen($_SESSION['login'])==0) 
     {   
 header('location:index.php');
 }
@@ -59,10 +59,8 @@ $searchrequest= strtoupper($_POST['search']);
 <?php $query=("select * from student where student_id=?");
     $stmt = $pdo->prepare($query);
     $row = $stmt->execute([$_SESSION['login']]);
-//$sql=mysqli_query($bd, "select * from student where student_id='".$_SESSION['login']."'");
 $cnt=1;
     
-//while($row=mysqli_fetch_array($sql))
     while($row= $stmt->fetch(PDO::FETCH_ASSOC))
 { ?>
 
@@ -145,7 +143,6 @@ $cnt++;
                 
       
 <?php } ?>
-   <!-- <span id="course-availability-status1" style="font-size:12px;"> -->
                          
  
 
@@ -167,21 +164,7 @@ $cnt++;
   <?php include('includes/footer.php');?>
     <script src="assets/js/jquery-1.11.1.js"></script>
     <script src="assets/js/bootstrap.js"></script>
-<script>/*
-function courseAvailability() {
-$("#loaderIcon").show();
-jQuery.ajax({
-url: "check_availability.php",
-data:'cid='+$("#course").val(),
-type: "POST",
-success:function(data){
-$("#course-availability-status1").html(data);
-$("#loaderIcon").hide();
-},
-error:function (){}
-});
-}*/
-</script>
+
 
 
 </body>

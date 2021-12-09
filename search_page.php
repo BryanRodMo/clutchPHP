@@ -4,7 +4,7 @@ include('includes/config.php');
 $pdo=connectDB();
 if ($pdo == false)
     die("ERROR: Unable to connect to database!");
-if(strlen($_SESSION['login'])==0) // or strlen($_SESSION['pcode'])==0)
+if(strlen($_SESSION['login'])==0) 
     {   
 header('location:index.php');
 }
@@ -14,51 +14,36 @@ $searchrequest= strtoupper($_POST['search']);
 
 }
 if(isset($_POST['save']))
-{ /*
-$student_id=$_POST['student_id'];
-$section=$_POST['CIBI3001'];
-$course='CIBI3001';//$_POST['course_id'];
-$query=("insert into enrollments (student_id,course_id,section_id,status) 
-        values(:student_id,:course,:section,:status)");
-$stmt=$pdo->prepare($query);
-$stmt->bindParam('student_id',$student_id);
-$stmt->bindParam('section',$section);
-$stmt->bindParam('course',$course);
-$stmt->bindValue('status',0);
-
-$ret=$stmt->execute();*/
-//$ret=mysqli_query($bd, "insert into enrollments(student_id,section,course) values('$student_id','$section','$course')");
-
+{ 
 
 if (!empty($_POST['radio'])) {
    $array = $_POST['radio'];
-   $implodeArray  = implode('-',$array) ;
-   $explodeArray = explode('-', $implodeArray);
+   $implArray  = implode('-',$array) ;
+   $explArray = explode('-', $implArray);
    $i = 0;
-   $j = 1;
    $status = 0;
-   $count = count($explodeArray);
+   $count = count($explArray);
    $count = $count / 2;
    for($x = 0; $x < $count ; $x++)
    {
 
-      $sql = "INSERT INTO enrollments (student_id, course_id, section_id, status)
+      $query = "INSERT INTO enrollments (student_id, course_id, section_id, status)
       VALUES (:student_id, :course_id, :section_id, :status)";
 
-          $stmt = $pdo->prepare($sql);
+          $stmt = $pdo->prepare($query);
           $stmt->execute(array(
               ':student_id' => $_SESSION['id'],
-              ':course_id' => $explodeArray[$i],
-              ':section_id' => $explodeArray[$i + 1],
+              ':course_id' => $explArray[$i],
+              ':section_id' => $explArray[$i + 1],
               ':status' => $status
           ));
 
 
-          $sql2 = "UPDATE  section SET capacity = capacity - 1
+          $query2 = "UPDATE  section SET capacity = capacity - 1
                    WHERE section_id = :section_id AND course_id = :course_id";
 
-                       $stmt = $pdo->prepare($sql2);
-                       $stmt->execute(array(":section_id" => $explodeArray[$i + 1],":course_id" => $explodeArray[$i] ));
+                       $stmt = $pdo->prepare($query2);
+                       $stmt->execute(array(":section_id" => $explArray[$i + 1],":course_id" => $explArray[$i] ));
                        $i = $i + 2;
 
    }
@@ -76,7 +61,6 @@ else
 }
 if(isset($_GET['del']))
       {
-              /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
 $query=("delete enrollments
 FROM enrollments
 where enrollments.section_id=? && enrollments.course_id=? && enrollments.student_id=?");
@@ -140,10 +124,10 @@ else
 <?php $query=("select * from student where student_id=?");
     $stmt = $pdo->prepare($query);
     $row = $stmt->execute([$_SESSION['login']]);
-//$sql=mysqli_query($bd, "select * from student where student_id='".$_SESSION['login']."'");
+
 $cnt=1;
     
-//while($row=mysqli_fetch_array($sql))
+
     while($row= $stmt->fetch(PDO::FETCH_ASSOC))
 { ?>
 
@@ -179,8 +163,7 @@ $cnt=1;
 
      ?><p>Choose from:</p><form method="post">
   <?php 
-          /*  $sql=mysqli_query($bd, "SELECT * FROM `section` where course_id like '%$searchrequest%'");
-            while($row=mysqli_fetch_array($sql))*/
+        
      $prev_row="TEST3000";
      $i=0;
      $query=("SELECT * FROM `section` where course_id like '%$searchrequest%'");
@@ -218,17 +201,7 @@ $cnt=1;
         }}
         $prev_row = $row['course_id'];
         ?>
-                           
-                           
-                           
-                           
-                           
-                           <!--
-                <input type="radio" id=" <?php// echo htmlentities($row['course_id']); ?> "
-                name="<?php// echo htmlentities($row['course_id']); ?> "
-                value="<?php// echo htmlentities($row['section_id']); ?> " >
-                <label for="course"> <?php// echo htmlentities($row['course_id']); ?> <?php// echo htmlentities($row['section_id']); ?> </label><br>
--->
+               
       <?php } ?>
     <button type="submit" name="save"  class="btn btn-default">Save</button>
      
@@ -236,7 +209,7 @@ $cnt=1;
     </form>
       
 <?php } ?>
-   <!-- <span id="course-availability-status1" style="font-size:12px;"> -->
+   
   </div>
                          
  <strong>
@@ -251,7 +224,7 @@ $cnt=1;
                                             <th>Course Name </th>
                                              <th>Title</th>
                                              <th>Section</th>
-                                             <!--<th>Action</th>-->
+                                             
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -282,16 +255,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 </a>
                                             </td>
                                             
-                                            <!--
-                                            <td>
-                                            <a href="" target="_blank">
-
-                                            <a href="print.php?id=<?php// echo $row['cid']?>" target="_blank"> 
-<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                       
-
-
-                                            </td>
-                                        </tr>--> 
+                                            
 <?php 
 $cnt++;
 } ?>
@@ -322,21 +286,6 @@ $cnt++;
   <?php include('includes/footer.php');?>
     <script src="assets/js/jquery-1.11.1.js"></script>
     <script src="assets/js/bootstrap.js"></script>
-<script>/*
-function courseAvailability() {
-$("#loaderIcon").show();
-jQuery.ajax({
-url: "check_availability.php",
-data:'cid='+$("#course").val(),
-type: "POST",
-success:function(data){
-$("#course-availability-status1").html(data);
-$("#loaderIcon").hide();
-},
-error:function (){}
-});
-}*/
-</script>
 
 
 </body>

@@ -95,17 +95,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
  <td><?php echo "UNSUCCESSFUL";?></td>
 <?php } ?>
 
-                                           <!--
-<!--
-                                            <td>
-                                            <a href="" target="_blank">
-
-                                            <a href="print.php?id=<?php// echo $row['cid']?>" target="_blank"> 
-<button class="btn btn-primary"><i class="fa fa-print "></i> Print</button> </a>                                       
-
-
-                                            </td>
-                                        </tr>--> 
+                                         
 <?php 
 $cnt++;
 } ?>                                                                           

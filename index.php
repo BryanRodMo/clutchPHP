@@ -11,7 +11,6 @@ $regno=$_POST['regno'];
 $password=md5($_POST['password']);
 $query="SELECT * FROM student WHERE student_id=? and password=?";
 $sql= $pdo->prepare($query);
-//$sql->bindParam("student_id", $regno, "password", $password, PDO::PARAM_STR);
 $sql->execute([$regno, $password]);
 $num=$sql->fetch(PDO::FETCH_ASSOC);
 
@@ -20,7 +19,7 @@ if($num)
   if($num['year_of_study']==0)
     $extra="admin/search_page.php";
   else{
-    $extra="search_page.php";//
+    $extra="search_page.php";
     } 
 $_SESSION['login']=$_POST['regno'];
 $_SESSION['id']=$num['student_id'];
@@ -37,9 +36,7 @@ $stmt->bindParam('status',$status);
 $stmt->execute();
    
     
-    /*
-$$log=mysqli_query("insert into userlog(student_id,userip,status)
-values('".$_SESSION['login']."','$uip','$status')");*/
+    
 $host=$_SERVER['HTTP_HOST'];
 $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
 header("location:http://$host$uri/$extra");

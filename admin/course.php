@@ -34,10 +34,9 @@ $stmt=$pdo->prepare($query);
 $stmt->bindParam('coursecode',$coursecode);
 $stmt->bindParam('coursesection',$coursesection);
 $stmt->bindParam('capacity',$seatlimit);
-$ret2=$stmt->execute();/*
-$ret=mysqli_query($bd, "insert into course(course_id,title,credits) values('$coursecode','$coursename','$courseunit')");
-$ret2=mysqli_query($bd, "insert into section(course_id,section_id,capacity) values('$coursecode','$coursesection','$seatlimit')");
-    */
+$ret2=$stmt->execute();
+
+    
 if($ret&&$ret2)
 {
 $_SESSION['msg']="Course Created Successfully !!";
@@ -49,7 +48,6 @@ else
 }
 if(isset($_GET['del']))        
       {
-              /*mysqli_query($bd, "delete from course where course_id = '".$_GET['id']."'");*/
 $query=("delete course.*, section.*
 FROM course INNER JOIN section 
 ON course.course_id = section.course_id 
@@ -163,7 +161,7 @@ else
                                     </thead>
                                     <tbody>
 <?php
-/*$sql=mysqli_query($bd, "SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id");*/
+
 $query=("SELECT course.*, section.section_id, section.capacity FROM `course` INNER JOIN section ON course.course_id = section.course_id");
 $stmt=$pdo->prepare($query);
 $stmt->execute(); 

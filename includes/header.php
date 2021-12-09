@@ -21,9 +21,6 @@ $student_id=$_SESSION['login'];
                     $row= $stmt->fetchALL();
                     echo $row['userip']; ?> at <?php echo $row['loginTime'];?>
                    
-                    <!--     $ret=$pdo->query($bd, "SELECT  * from userlog where student_id='".$_SESSION['login']."' order by id desc limit 1,1");
-                    $row= $stmt->fetch($ret);
-                    echo $row['userip']; ?> at <?php/* echo $row['loginTime'];*/?> -->
                     
                     </strong>
                 </div>
