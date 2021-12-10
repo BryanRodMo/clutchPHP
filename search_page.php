@@ -156,7 +156,7 @@ $cnt=1;
         
      $prev_row="TEST3000";
      $i=0;
-     $query=("SELECT * FROM `section` where course_id like '%$searchrequest%'");
+     $query=("SELECT * FROM `section` where course_id like '%$searchrequest%' order by course_id ASC, section_id ASC");
      $stmt = $pdo->prepare($query);
      $row = $stmt->execute();
     

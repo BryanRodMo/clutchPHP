@@ -111,7 +111,7 @@ $cnt=1;
                                     </thead>
                                     <tbody>
 <?php
- $query=("SELECT * FROM `section` where course_id like '%$searchrequest%'");
+ $query=("SELECT * FROM `section` where course_id like '%$searchrequest%' order by course_id ASC, section_id ASC");
      $stmt = $pdo->prepare($query);
      $row = $stmt->execute();
             while($row= $stmt->fetch(PDO::FETCH_ASSOC))

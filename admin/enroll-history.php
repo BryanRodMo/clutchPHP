@@ -84,13 +84,20 @@ while($row = $stmt7->fetch(PDO::FETCH_ASSOC))
                                             <td><?php echo htmlentities($row['student_id']);?></td>
                                             <td><?php echo htmlentities($row['course_id']);?></td>
                                              <td><?php echo htmlentities($row['section_id']);?></td>
-<?php						                 if($row['status']==0){?>
-                                            <td><?php echo "PENDING";?></td>
-                                            <?php } else if($row['status']==1){?>
-                                            <td><?php echo "SUCCESSFUL";?></td>
-                                            <?php}  else{?>
-                                            <td><?php echo "UNSUCCESSFUL";?></td>
-                                                   <?php } ?>
+<?php						                 switch($row['status']){
+    case '0':
+?>  <td><?php echo "PENDING";?></td> <?php
+        break;
+    case '1':
+        ?>  <td><?php echo "SUCCESSFUL";?></td> <?php
+        break;
+    case '2':
+        ?>  <td><?php echo "UNSUCCESSFUL";?></td> <?php
+        break;
+        
+        ?>
+                                                
+                                       <?php } ?>
                                         </tr>            
 
 
