@@ -43,9 +43,13 @@ $stmt->bindParam('capacity',$seatlimit);
 $ret2=$stmt->execute();
 
     
-if($ret&&$ret2)
+if($ret)
 {
-$_SESSION['msg']="Course Created Successfully !!";
+$_SESSION['msg']="Course Created Successfully !";
+}
+elseif($ret2)
+{
+  $_SESSION['msg']="Section Created Successfully !";
 }
 else
 {
