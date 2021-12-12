@@ -37,7 +37,7 @@ if (!empty($_POST['radio'])) {
               ':section_id' => $explArray[$i + 1],
               ':status' => $status
           ));
-
+    $i = $i + 2;
 
           
    }
@@ -160,9 +160,9 @@ $cnt=1;
      $stmt = $pdo->prepare($query);
      $row = $stmt->execute();
     
-            while($row= $stmt->fetch(PDO::FETCH_ASSOC))
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC))
      {
-            $query=("SELECT * FROM `enrollments` where course_id=? && student_id=?");
+            $query=("SELECT * FROM `enrollments` where course_id=? && student_id=? ");
             $stmt2 = $pdo->prepare($query);
             $stmt2->execute([$row['course_id'],$_SESSION['id']]);
             $check = $stmt2->fetch(PDO::FETCH_ASSOC);
